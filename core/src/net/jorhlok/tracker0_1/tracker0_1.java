@@ -172,22 +172,22 @@ public class tracker0_1 extends ApplicationAdapter {
         jtp.Instrument[0].PCM4[14] = 14;
         jtp.Instrument[0].PCM4[15] = 15;
         
-        jtp.Instrument[0].PCMLength[0] = 0;
-        jtp.Instrument[0].PCMLength[1] = 1;
+        jtp.Instrument[0].PCMLength[0] = 2;
+        jtp.Instrument[0].PCMLength[1] = 2;
         jtp.Instrument[0].PCMLength[2] = 2;
-        jtp.Instrument[0].PCMLength[3] = 3;
-        jtp.Instrument[0].PCMLength[4] = 4;
-        jtp.Instrument[0].PCMLength[5] = 5;
-        jtp.Instrument[0].PCMLength[6] = 6;
-        jtp.Instrument[0].PCMLength[7] = 7;
-        jtp.Instrument[0].PCMLength[8] = 8;
-        jtp.Instrument[0].PCMLength[9] = 9;
-        jtp.Instrument[0].PCMLength[10] = 10;
-        jtp.Instrument[0].PCMLength[11] = 11;
-        jtp.Instrument[0].PCMLength[12] = 12;
-        jtp.Instrument[0].PCMLength[13] = 13;
-        jtp.Instrument[0].PCMLength[14] = 14;
-        jtp.Instrument[0].PCMLength[15] = 15;
+        jtp.Instrument[0].PCMLength[3] = 2;
+        jtp.Instrument[0].PCMLength[4] = 2;
+        jtp.Instrument[0].PCMLength[5] = 2;
+        jtp.Instrument[0].PCMLength[6] = 2;
+        jtp.Instrument[0].PCMLength[7] = 2;
+        jtp.Instrument[0].PCMLength[8] = 2;
+        jtp.Instrument[0].PCMLength[9] = 2;
+        jtp.Instrument[0].PCMLength[10] = 2;
+        jtp.Instrument[0].PCMLength[11] = 2;
+        jtp.Instrument[0].PCMLength[12] = 2;
+        jtp.Instrument[0].PCMLength[13] = 2;
+        jtp.Instrument[0].PCMLength[14] = 2;
+        jtp.Instrument[0].PCMLength[15] = 2;
         
         PEdit = new patternEdit();
         PEdit.fg1 = fg1;

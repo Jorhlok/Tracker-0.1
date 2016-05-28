@@ -17,22 +17,18 @@ public class JavaxAudioDevice implements AudioInterface, LineListener {
 
     AsyncPlay aplay;
     short[] curBuf;
-    byte[] byteBuf = null;
 
     boolean quit = false;
     boolean hasquit = false;
     boolean underflow = false;
 
     SourceDataLine Output;
-    int leader = 1024;
-    boolean notDoneYet = false;
-    boolean alreadyLead = false;
+    int buffer = 44100/15;
 
     @Override
     public int create() {
         quit = false;
         AudioFormat af = new AudioFormat(44100, 16, 2, true, false);
-//        AudioFormat af = new AudioFormat(44100, 8, 1, true, false);
         try {
             Output = AudioSystem.getSourceDataLine(af);
         } catch (Exception e) {
@@ -43,19 +39,18 @@ public class JavaxAudioDevice implements AudioInterface, LineListener {
         if (Output != null) {
             Output.addLineListener(this);
             try {
-                Output.open(af,leader);
+                Output.open(af,buffer);
             } catch (Exception e) {
                 System.err.println("Failed to open audio device. " + e.getLocalizedMessage());
                 return 2;
             }
         }
-        System.err.println("Created JavaxAudioDevice");
-//        byte[] bytes = new byte[leader];
-//        alreadyLead = true;
-//        Output.write(bytes, 0, bytes.length);
-//        Output.start();
-        update(null);
-        System.err.println(Output.getFormat().toString());
+        else {
+            return 3;
+        }
+        
+        Output.write(new byte[4], 0, 4);
+        Output.start();
         return 0;
     }
 
@@ -65,7 +60,6 @@ public class JavaxAudioDevice implements AudioInterface, LineListener {
         Output.close();
         Output.flush();
         Output = null;
-        hasquit = true;
     }
 
     @Override
@@ -96,62 +90,33 @@ public class JavaxAudioDevice implements AudioInterface, LineListener {
 //LineListener
     @Override
     public void update(LineEvent le) {
-            if (le == null) System.err.println("Audio update");
-            else System.err.println("Audio update " + le.toString());
-            
-        if ( !quit && ( le == null || le.getType() == LineEvent.Type.STOP ) ) {
-            boolean uf = false;
-            while (notDoneYet) {
-                uf = true;
-            }
-            //race condition if you have more than one of these waiting on another
-            //      if that happens, god help you
-            notDoneYet = true;
-            if (uf) {
-                underflow = true;
-                System.err.println("underflow");
-            }
-            
-            if (byteBuf == null) { //insert some leader tape
-                byteBuf = new byte[leader];
-                for (int i = 0; i < byteBuf.length; ++i)
-                    byteBuf[i] = 0;
-                
-                if (alreadyLead) System.err.println("Using audio leader when not supposed to!");
-                else alreadyLead = true;
-            }
-            Output.write(byteBuf, 0, byteBuf.length);
-            Output.start();
-            byteBuf = null;
-            if (!Output.isRunning()) { //debug
-                System.err.println("Output not running");
-            } else {
-                System.err.println("Output running");
-            }
+        System.err.println("Audio update " + le.toString());
 
-            aplay.call();
-            curBuf = aplay.output;
-            if (curBuf == null) {
-                //I don't know how to help you
-                notDoneYet = false;
-                System.err.println("Unable to fill buffer");
-                return;
-            }
-            byteBuf = new byte[curBuf.length * 2];
-            for (int i = 0; i < byteBuf.length; ++i) {
-                //little endian
-                if (i % 2 == 0) byteBuf[i] = (byte) (curBuf[i / 2]); //low byte
-                else byteBuf[i] = (byte) (curBuf[i / 2] >> 8); //high byte
-            }
-            
-//            byteBuf = new byte[curBuf.length/2]; //debug 8 bit mono
-//            for (int i = 0; i < byteBuf.length; ++i) {
-//                byteBuf[i] = (byte) (curBuf[i*2] >> 8);
-//            }
-            
-            notDoneYet = false;
+        if (le.getType() == LineEvent.Type.STOP) {
+            quit = true;
         }
+        else if (le.getType() == LineEvent.Type.START) {
+            byte[] byteBuf;
+            quit = false;
+            while (!quit) {
+                aplay.call();
+                curBuf = aplay.output;
+                if (curBuf == null) {
+                    underflow = true;
+                    quit = true;
+                }
+                byteBuf = new byte[curBuf.length*4];
+                for (int i=0; i<curBuf.length; ++i) {
+                    byteBuf[i*4] = byteBuf[i*4+2] = (byte)curBuf[i];
+                    byteBuf[i*4+1] = byteBuf[i*4+3] = (byte)(curBuf[i]>>8);
+                }
+                Output.write(byteBuf, 0, byteBuf.length);
+            }
+            hasquit = true;
+        }
+//        else if (le.getType() == LineEvent.Type.OPEN) {
+//            Output.start();
+//        }
 
     }
 }
-//*/
