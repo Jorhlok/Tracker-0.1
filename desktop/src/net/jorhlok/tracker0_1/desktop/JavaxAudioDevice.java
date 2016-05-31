@@ -99,7 +99,7 @@ public class JavaxAudioDevice implements AudioInterface, LineListener {
             byte[] byteBuf;
             quit = false;
             while (!quit) {
-                aplay.call();
+                aplay.use();
                 curBuf = aplay.output;
                 if (curBuf == null) {
                     underflow = true;

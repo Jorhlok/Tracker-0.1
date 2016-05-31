@@ -5,4 +5,6 @@ Tracker 0.1
 Features:
   - Color Display
   - Stereo Sound
-  - Keyboard Compatable
+  - Keyboard Compatibility
+
+

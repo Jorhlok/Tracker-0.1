@@ -157,6 +157,7 @@ public class ChannelType1 {
     }
 
     public void setStepper(int s) {
+        System.err.println(s);
         if (s < 0) {
             Stepper = 0;
         } else if (s > MaxCount) {

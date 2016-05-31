@@ -87,8 +87,8 @@ public class JPSG {
                 break;
             default:
         }
-        if (Channels0.length > 0) Stereo0 = new byte[Channels0.length];
-        if (Channels1.length > 0) Stereo1 = new byte[Channels1.length];
+        if (Channels0 != null && Channels0.length > 0) Stereo0 = new byte[Channels0.length];
+        if (Channels1 != null && Channels1.length > 0) Stereo1 = new byte[Channels1.length];
     }
     
     //writing
@@ -96,7 +96,7 @@ public class JPSG {
          @param i select channel type (0 or 1)
          @param s [n of channel type] __LR 0-3 or -1 for no change
          */
-            void setStereo(int i, int[] s) {
+            public void setStereo(int i, int[] s) {
                 if (s == null) return;
                 byte[] arr = null;
                 switch (i) {
@@ -118,7 +118,7 @@ public class JPSG {
         /**chip's channel1 noise bytes
          @param nz [ 0 to Channels1.length ] - 0 or 1 to set or -1 to not change
          */
-            void setNoise(int[] nz) {
+            public void setNoise(int[] nz) {
                 if (nz == null) return;
                 for (int it=0; it<nz.length && it<Channels1.length; ++it) {
                     if (nz[it] > 0) Channels1[it].setNoise(nz[it] != 0);
@@ -128,7 +128,7 @@ public class JPSG {
          @param i select which channel1
          @param sam [n] - write first n samples each -8 to 7
          */
-            void setSamples(int i, byte[] sam) {
+            public void setSamples(int i, byte[] sam) {
                 if (sam == null || i < 0 || i >= Channels1.length) return;
                 Channels1[i].setSamples(sam);
             }
@@ -136,7 +136,7 @@ public class JPSG {
          @param i select which channel1
          @param w pulse width 0x0-F
          */
-            void setWidth(int i, int w) {
+            public void setWidth(int i, int w) {
                 if (i < 0 || i >= Channels1.length) return;
                 Channels1[i].setWidth(w);
             }
@@ -144,7 +144,7 @@ public class JPSG {
          @param i select which channel1
          @param c set counter 0x000000-FFFFFF
          */
-            void setCounter(int i, int c) {
+            public void setCounter(int i, int c) {
                 if (i < 0 || i >= Channels1.length) return;
                 Channels1[i].setCounter(c);
             }
@@ -152,15 +152,17 @@ public class JPSG {
          @param i select which channel1
          @param s set stepper 0x000000-FFFFFF (controls frequency)
          */
-            void setStepper(int i, int s) {
+            public void setStepper(int i, int s) {
+                System.err.printf("%d , %d, %d\n", i , s, Channels1.length);
                 if (i < 0 || i >= Channels1.length) return;
+                System.err.println("setStepper");
                 Channels1[i].setStepper(s);
             }
         /**channel1 number of samples
          @param i select which channel1
          @param n number of samples used in the tone 0-64
          */
-            void setnSamples(int i, int n) {
+            public void setnSamples(int i, int n) {
                 if (i < 0 || i >= Channels1.length) return;
                 Channels1[i].setnSamples(n);
             }
@@ -168,7 +170,7 @@ public class JPSG {
          @param i select which channel0
          @param o option values 0-7 (ghetto volume)
          */
-            void setVolume(int i, int v) {
+            public void setVolume(int i, int v) {
                 if (i < 0 || i >= Channels0.length) return;
                 Channels0[i].setVolume(v);
             }
@@ -176,12 +178,12 @@ public class JPSG {
          @param i select which channel0
          @param sam the stored -128 to 127
          */
-            void setSample(int i, int sam) {
+            public void setSample(int i, int sam) {
                 if (i < 0 || i >= Channels0.length) return;
                 Channels0[i].setSample(sam);
             }
         /**increment counters*/
-            void step() {
+            public void step() {
                 for (int i=0; i<Channels1.length; ++i) {
                     Channels1[i].step();
                 }
@@ -191,20 +193,20 @@ public class JPSG {
         /**get chip model
          @return chips's model
          */
-            Models getModel() {
+            public Models getModel() {
                 return Model;
             }
         /**get chip model
          @return chips's model name
          */
-            String getModelName() {
+            public String getModelName() {
                 return Model.name;
             }
         /**chip's stereo bytes
          @param i channel type (0 or 1)
          @return byte[n of channel type] 0-3 ____ __LR
          */
-            byte[] getStereo(int i) {
+            public byte[] getStereo(int i) {
                 switch (i) {
                     case 0:
                         return Stereo0.clone();
@@ -217,7 +219,7 @@ public class JPSG {
         /**chip's channel1 noise bytes
          @return byte[Channels1.length] (0 or 1)
          */
-            byte[] getNoise() {
+            public byte[] getNoise() {
                 if (Channels1.length <= 0) return null;
                 byte[] arr = new byte[Channels1.length];
                 for (int it=0; it<arr.length; ++it) {
@@ -230,7 +232,7 @@ public class JPSG {
          @param i select which channel1
          @return byte[64] -8 to 7
          */
-            byte[] getSamples(int i) {
+            public byte[] getSamples(int i) {
                 if (i < 0 || i >= Channels1.length) return null;
                 return Channels1[i].getSamples(); //already a clone here
             }
@@ -238,7 +240,7 @@ public class JPSG {
          @param i select which channel1
          @return 0x0-F
          */
-            byte getWidth(int i) {
+            public byte getWidth(int i) {
                 if (i < 0 || i >= Channels1.length) return 0;
                 return Channels1[i].getWidth();
             }
@@ -246,7 +248,7 @@ public class JPSG {
          @param i select which channel1
          @return 0x000000-FFFFFF
          */
-            int getCounter(int i) {
+            public int getCounter(int i) {
                 if (i < 0 || i >= Channels1.length) return 0;
                 return Channels1[i].getCounter();
             }
@@ -254,7 +256,7 @@ public class JPSG {
          @param i select which channel1
          @return 0x000000-FFFFFF
          */
-            int getStepper(int i) {
+            public int getStepper(int i) {
                 if (i < 0 || i >= Channels1.length) return 0;
                 return Channels1[i].getStepper();
             }
@@ -262,7 +264,7 @@ public class JPSG {
          @param i select which channel1
          @return 0-64
          */
-            byte getnSamples(int i) {
+            public byte getnSamples(int i) {
                 if (i < 0 || i >= Channels1.length) return 0;
                 return Channels1[i].getnSamples();
             }
@@ -270,7 +272,7 @@ public class JPSG {
          @param i select which channel0
          @return 0-7 (ghetto volume)
          */
-            byte getVolume(int i) {
+            public byte getVolume(int i) {
                 if (i < 0 || i >= Channels0.length) return 0;
                 return Channels0[i].getVolume();
             }
@@ -278,14 +280,14 @@ public class JPSG {
          @param i select which channel0
          @return -128 to 127
          */
-            byte getSample(int i) {
+            public byte getSample(int i) {
                 if (i < 0 || i >= Channels0.length) return 0;
                 return Channels0[i].getSample();
             }
         /**calculate sample data
          @return short[2] left sample then right sample
          */
-            short[] output() {
+            public short[] output() {
                 if (Model == null) return null;
                 short l0 = 0, r0 = 0, l1 = 0, r1 = 0;
                 short[] ret = new short[]{0,0};

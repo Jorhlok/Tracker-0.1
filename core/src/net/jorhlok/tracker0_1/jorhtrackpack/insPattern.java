@@ -72,25 +72,25 @@ public class insPattern {
         }
 
         if (Stereo[index] >= 0) {
-            ret += Integer.toHexString(Stereo[index] & 3);
+            ret += Integer.toHexString(Stereo[index] & 3).toUpperCase();
         } else {
             ret += ",";
         }
 
         if (Volume[index] >= 0) {
-            ret += Integer.toHexString(Volume[index] & 15);
+            ret += Integer.toHexString(Volume[index] & 15).toUpperCase();
         } else {
             ret += ",";
         }
 
         if (Width[index] >= 0) {
-            ret += Integer.toHexString(Width[index] & 15);
+            ret += Integer.toHexString(Width[index] & 15).toUpperCase();
         } else {
             ret += ",";
         }
 
         if (Instrument[index] >= 0) {
-            str = Integer.toHexString(Instrument[index]);
+            str = Integer.toHexString(Instrument[index]).toUpperCase();
             switch (2 - str.length()) {
                 case 1:
                     ret += "0" + str;
@@ -112,7 +112,7 @@ public class insPattern {
         }
 
         if (FX1[index] >= 0) {
-            str = Integer.toHexString(FX1[index] & 15);
+            str = Integer.toHexString(FX1[index] & 15).toUpperCase();
             switch (str.length()) {
                 case 1:
                     ret += str;
@@ -125,7 +125,7 @@ public class insPattern {
         }
 
         if (FX2[index] >= 0) {
-            str = Integer.toHexString(FX2[index] & 15);
+            str = Integer.toHexString(FX2[index] & 15).toUpperCase();
             switch (str.length()) {
                 case 1:
                     ret += str;

@@ -9,22 +9,22 @@ import net.jorhlok.tracker0_1.jorhtrackpack.jti;
  */
 public class ChannelModel1 {
     public jti Instrument;
-    public boolean Retrig;
-    public boolean Release;
-    public int Stepper;
-    public int Note; // 0 to 12^5-1 or 248831
-    public byte Stereo;
-    public byte Volume;
-    public byte Width;
-    public short EnvelopeIndex;
-    public char Effect; // Alphanumeric + Punctuation 20-7E
-    public byte FX1; // 0-F (-1 for null)
-    public byte FX2; // 0-F (-1 for null)
-    public int FXIndex;
+    public boolean Retrig = false;
+    public boolean Release = false;
+    public int Stepper = 0;
+    public int Note = 0; // 0 to 12^5-1 or 248831
+    public byte Stereo = 3;
+    public byte Volume = 15;
+    public byte Width = 15;
+    public short EnvelopeIndex = 0;
+    public char Effect = ' '; // Alphanumeric + Punctuation 20-7E
+    public byte FX1 = 0; // 0-F (-1 for null)
+    public byte FX2 = 0; // 0-F (-1 for null)
+    public int FXIndex = 0;
     
-    public short SEnvIndex;
-    public short VEnvIndex;
-    public short WEnvIndex;
+    public short SEnvIndex = 0;
+    public short VEnvIndex = 0;
+    public short WEnvIndex = 0;
     
 //vibrato and pitch slide
     public int VibLo;
