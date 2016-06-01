@@ -75,7 +75,7 @@ public class tracker0_1 extends ApplicationAdapter {
 //        parameter.genMipMaps = true;
         parameter.magFilter = TextureFilter.Linear;
         parameter.minFilter = TextureFilter.Linear;
-        parameter.characters = parameter.characters + ",▄■";
+        parameter.characters = parameter.characters + "▄■";
         font = generator.generateFont(parameter);
         generator.dispose();
         
@@ -208,7 +208,7 @@ public class tracker0_1 extends ApplicationAdapter {
         aplay.pr = new PlayRoutine();
         aplay.pr.data = jtp;
         aplay.pr.track = 0;
-        aplay.chip = new JPSG(JPSG.Models.JPSG1608M);
+//        aplay.chip = new JPSG(JPSG.Models.JPSG1608M);
         if (audio == null) {
             //GDX only implementation, you might stutter
             System.err.println("Using GDX only audio device, might have stuttering.");

@@ -19,6 +19,15 @@ public class PlayRoutine {
     public int counts;
     
     public ChannelModel1[] Channels1;
+    /*
+    I have concluded that objects inside aplay 
+        cannot access their own arrays 
+        but deeper is fine?
+    no because I did the shit out of arrays in ChannelType1
+        but PlayRoutine and JPSG aren't allowed to?
+    ChannelType1 only uses primitives
+        while PlayRoutune and JPSG use arrays of objects
+    */
     
     public PlayRoutine() {
         Channels1 = new ChannelModel1[8];
@@ -31,7 +40,9 @@ public class PlayRoutine {
     public void update() {
         System.err.println("pr.update();");
         frame f = data.Track[track].Frame[frame];
+        System.err.println("read frame");
         Channels1[0].Instrument = data.Instrument[0];
+        System.err.println("read instrument");
         if (counter == 0) {
             insPattern patt = data.Track[0].InsPattern[ f.InsPattern[0] ];
             System.err.println("int note = parseNote(patt.Note[line]);");
@@ -41,6 +52,7 @@ public class PlayRoutine {
                 Channels1[0].Retrig = true;
             }
         }
+        System.err.println("updated stuff or not " + Integer.toString(counter));
         
 //        Channels1[0].step();
 //        for (ChannelModel1 m : Channels1) {
@@ -57,7 +69,11 @@ public class PlayRoutine {
     public int parseNote(String n) {
         if (n == null) return -1;
         String note = n.replace(':', ' ').trim();
-        if (n.equalsIgnoreCase("xxxxxx")) {
+        int tmp = Integer.parseInt(note, 16);
+        if (tmp >=0) {
+            return tmp;
+        }
+        else if (n.equalsIgnoreCase("xxxxxx")) {
             return 0;
         }
         else if (note.length() == 3) {
@@ -82,9 +98,28 @@ public class PlayRoutine {
             }
             byte octave = (byte)Character.digit(note.charAt(2), 16);
             if (octave < 0 || octave > 15) return -1;
-            if (letter < 'C') letter += 7; //A and B come after G in music
-            System.err.println("return StepperTable[xyz];");
-            return StepperTable[12*octave + letter-'C' + offset];
+            switch (letter) { //major scale is major in the world
+                case 'D':
+                    offset += 2;
+                    break;
+                case 'E':
+                    offset += 4;
+                    break;
+                case 'F':
+                    offset += 5;
+                    break;
+                case 'G':
+                    offset += 7;
+                    break;
+                case 'A':
+                    offset += 9;
+                    break;
+                case 'B':
+                    offset += 11;
+                    break;
+                default: //'C'
+            }
+            return StepperTable[12*octave + offset];
         }
         return -1;
     }

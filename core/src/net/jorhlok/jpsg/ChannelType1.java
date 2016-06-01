@@ -41,7 +41,7 @@ public class ChannelType1 {
     static private long HashTable[][];
 
     static private int PWMTable[][]; // how long a sample takes = PWMTable[sample size-1][pulse width*2+side]; side = 0-front or 1-back
-    static private int MaxCount = (1 << 24) - 1; //24 bit counter 0 to 2^24-1
+    static private final int MaxCount = (1 << 24) - 1; //24 bit counter 0 to 2^24-1
 //24 bit counter 0 to 2^24-1
 
     private byte Width = 0; // 0x0-F squeezes left from 16/32 to 1/32 (Width+1)/32
@@ -168,7 +168,6 @@ public class ChannelType1 {
     }
 
     public void setStepper(int s) {
-//        System.err.println(s);
         if (s < 0) {
             Stepper = 0;
         } else if (s > MaxCount) {
