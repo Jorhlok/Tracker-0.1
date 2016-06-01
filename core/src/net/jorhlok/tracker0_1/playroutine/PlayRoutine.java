@@ -69,11 +69,11 @@ public class PlayRoutine {
     public int parseNote(String n) {
         if (n == null) return -1;
         String note = n.replace(':', ' ').trim();
-        int tmp = Integer.parseInt(note, 16);
-        if (tmp >=0) {
-            return tmp;
+        if (note.length() == 6) {
+            int tmp = Integer.parseInt(note, 16);
+            if (tmp > 0) return tmp;
         }
-        else if (n.equalsIgnoreCase("xxxxxx")) {
+        if (n.equalsIgnoreCase("xxxxxx")) {
             return 0;
         }
         else if (note.length() == 3) {
