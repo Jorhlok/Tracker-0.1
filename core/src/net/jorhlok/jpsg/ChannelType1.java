@@ -41,9 +41,10 @@ public class ChannelType1 {
 
     static private int PWMTable[][]; // how long a sample takes = PWMTable[sample size-1][pulse width*2+side]; side = 0-front or 1-back
     static private int MaxCount = (1 << 24) - 1; //24 bit counter 0 to 2^24-1
+//24 bit counter 0 to 2^24-1
 
     private byte Width = 0; // 0x0-F squeezes left from 16/32 to 1/32 (Width+1)/32
-    private byte[] Samples; // 0 to 64 samples from -8 to 7
+    private byte[] Samples; 
     private byte nSamples = 0; //1 to 64 for active sound
     private boolean Noise = false;
 
@@ -63,6 +64,7 @@ public class ChannelType1 {
     }
 
     private void init(int w, byte[] sam, int n, boolean nz) {
+        this.Samples = new byte[64];
         setWidth(w);
         setSamples(sam);
         initPWMTable();
@@ -72,17 +74,11 @@ public class ChannelType1 {
 
     static private void initPWMTable() {
         if (PWMTable == null) {
-            PWMTable = new int[65][32];
-            for (int sl = 1; sl <= 65; sl++) {
+            PWMTable = new int[64][32];
+            for (int sl = 1; sl <= 64; sl++) {
                 for (int pw = 16; pw > 0; pw--) {
-                    if (sl == 65) {
-                        PWMTable[sl - 1][((16 - pw) * 2) - 1] = (int) (MaxCount * (pw / (256 * 16f))); //peak sample lengths
-                        PWMTable[sl - 1][(16 - pw) * 2] = (int) ((MaxCount - (PWMTable[sl - 2][((16 - pw) * 2) - 1] * Math.floor(256 / 2f))) / Math.ceil(256 / 2f));
-                    }
-                    else {
-                        PWMTable[sl - 1][((16 - pw) * 2) - 1] = (int) (MaxCount * (pw / (sl * 16f))); //peak sample lengths
-                        PWMTable[sl - 1][(16 - pw) * 2] = (int) ((MaxCount - (PWMTable[sl - 2][((16 - pw) * 2) - 1] * Math.floor(sl / 2f))) / Math.ceil(sl / 2f));
-                    }
+                    PWMTable[sl - 1][pw * 2 - 2] = (int) (MaxCount * (pw / (sl * 16f))); //peak sample lengths
+                    PWMTable[sl - 1][pw * 2 - 1] = (int) ((MaxCount - (PWMTable[sl - 1][pw * 2 - 2] * Math.floor(sl / 2f))) / Math.ceil(sl / 2f));
                 }
             }
         }
@@ -157,7 +153,7 @@ public class ChannelType1 {
     }
 
     public void setStepper(int s) {
-        System.err.println(s);
+//        System.err.println(s);
         if (s < 0) {
             Stepper = 0;
         } else if (s > MaxCount) {
