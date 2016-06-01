@@ -99,7 +99,8 @@ public class ChannelType1 {
     }
 
     public void setWidth(int w) {
-        Width = (byte) (w & 15);
+        if (w < 0) Width = 0;
+        else Width = (byte) (w & 15);
     }
 
     public byte getWidth() {
@@ -192,6 +193,43 @@ public class ChannelType1 {
 
     public void step() {
         Counter += Stepper;
-        Counter %= MaxCount+1;
+        if (Counter > MaxCount) {
+            Counter &= MaxCount;
+            if (Noise) {
+//                //first good one
+//                for (int i=0; i<Samples.length; ++i) {
+//                    //nybble transformation multiplies noise sample length by 16
+//                    //from 256 to a more respectable 4096
+//                    //aww man there's still a ringing
+//                    Samples[i] += 8;
+//                    Samples[i] += ((i<<1)+1)&15; //add an odd number
+//                    Samples[i] &= 15;
+//                    Samples[i] -= 8;
+//                }
+                
+//                for (int i=0; i<Samples.length; i+=2) {
+//                    //from 256 to (maybe) 2^16
+//                    short s = (short)((Samples[i]+8)+(Samples[i+1]+8)<<4); //work with 8 bit chunks (little endian)
+//                    s *= i+5;
+//                    s &= 255;
+//                    Samples[i] = (byte)((s&15)-8);
+//                    Samples[i+1] = (byte)( ( (s>>4)&15) - 8 );
+//                }
+                
+                //still ringing
+                byte[] bites = Samples.clone();
+                Samples[0] += 8;
+                Samples[0] += bites[Samples.length-1]+8;
+                Samples[0] &= 15;
+                Samples[0] -= 8;
+                for (int i=1; i<Samples.length; ++i) {
+                    if (bites[i-1] == 0 || bites[i-1] == -8) bites[i-1] += 1;
+                    Samples[i] += 8;
+                    Samples[i] += bites[i-1]+8;
+                    Samples[i] &= 15;
+                    Samples[i] -= 8;
+                }
+            }
+        }
     }
 }

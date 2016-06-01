@@ -25,6 +25,7 @@ public class AsyncPlay implements AsyncTask {
     public Object use() {
 //        System.err.println("aplay.call();");
         if (chip == null || pr == null) return -1;
+//        System.err.println(Arrays.toString(ch.getSamples()));
 //        pr.update();
 //        System.err.println("pr.update(); //done");
 //        chip.setStepper( 0, (int)Math.round(440.0/44100*(1<<24) ) );//pr.Channels1[0].Stepper);
@@ -40,7 +41,8 @@ public class AsyncPlay implements AsyncTask {
 //        chip.setStereo(0, new int[] {3,3,3,3, 3,3,3,3});
 //        System.err.println("sets");
 //        chip.setWidth(0, 15);
-        ch.setWidth(15);
+        if (ch.getWidth() <= 0) ch.setWidth(15);
+        else ch.setWidth(ch.getWidth()-1);
 //        System.err.println("setw");
         ch.setNoise(true);
 
@@ -54,7 +56,7 @@ public class AsyncPlay implements AsyncTask {
 //            samp = chip.output();
             ch.step();
             samp = new short[2];
-            samp[0] = samp[1] = (short)(ch.output()*5000);
+            samp[0] = samp[1] = (short)(ch.output()*2000);
             if (samp == null || samp.length != 2) return -2;
             output[i] = samp[0];
             output[i+1] = samp[1];
