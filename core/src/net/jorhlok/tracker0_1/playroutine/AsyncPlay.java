@@ -30,7 +30,7 @@ public class AsyncPlay implements AsyncTask {
 //        System.err.println("pr.update(); //done");
 //        chip.setStepper( 0, (int)Math.round(440.0/44100*(1<<24) ) );//pr.Channels1[0].Stepper);
 //        ch.setStepper( (int)Math.round(440.0/44100*(1<<24) ) );//pr.Channels1[0].Stepper);
-        ch.setStepper(0x010000);
+        ch.setStepper(0x040000);
 //        System.err.println("setstep");
 //        chip.setSamples(0, pr.data.PCM4[15]);
 //        ch.setSamples(pr.data.PCM4[15]);

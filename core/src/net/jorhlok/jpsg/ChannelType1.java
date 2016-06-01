@@ -24,20 +24,21 @@
 package net.jorhlok.jpsg;
 
 /**
- * Channel Type 1 "4-bit waveform tone and 1-bit noise generator." 
+ * Channel Type 1 "4-bit waveform tone and 4 or 1 bit noise generator." 
  * 
  * Uses up to 64 4-bit samples as a waveform. 
  * Uses 24-bit index for the waveform.
  * Has Pulse
  * Width able to be applied to any waveform. 
  * Volume is a function of the waveform and is taken care of by the play routine. 
- * Virtual shift register noise generator. 
- *      Views sample data as a 256-bit register.
+ * Noise generator. 
  *      Width used as volume;
  *
  * @author jorh
  */
 public class ChannelType1 {
+    
+    static private long HashTable[][];
 
     static private int PWMTable[][]; // how long a sample takes = PWMTable[sample size-1][pulse width*2+side]; side = 0-front or 1-back
     static private int MaxCount = (1 << 24) - 1; //24 bit counter 0 to 2^24-1
@@ -68,6 +69,7 @@ public class ChannelType1 {
         setWidth(w);
         setSamples(sam);
         initPWMTable();
+        initHashTable();
         setnSamples(n);
         Noise = nz;
     }
@@ -79,6 +81,18 @@ public class ChannelType1 {
                 for (int pw = 16; pw > 0; pw--) {
                     PWMTable[sl - 1][pw * 2 - 2] = (int) (MaxCount * (pw / (sl * 16f))); //peak sample lengths
                     PWMTable[sl - 1][pw * 2 - 1] = (int) ((MaxCount - (PWMTable[sl - 1][pw * 2 - 2] * Math.floor(sl / 2f))) / Math.ceil(sl / 2f));
+                }
+            }
+        }
+    }
+    
+    static private void initHashTable() {
+        if (HashTable == null) {
+            HashTable = new long[16][16];
+            for (int i=0; i<16; ++i) {
+                long exp = (long)Math.pow(63, 15-i);
+                for (int j=0; j<16; ++j) {
+                    HashTable[i][j] = (j+1)*exp;
                 }
             }
         }
@@ -177,15 +191,23 @@ public class ChannelType1 {
      * @return Sound output from -8 to 7
      */
     public byte output() {
-        if (nSamples <= 0 || nSamples > 64) {
+        if ( (nSamples <= 0 || nSamples > 64) && !Noise ) {
             return 0;
         }
         byte sample = 0;
         if (Noise) {
-            sample = (byte)(Samples[Counter>>18]+8); //get nybble via high 6 bits of counter
-            sample = (byte)( (sample>>( (Counter>>16)&7 ))&1 ); //get bit as addressed by lower 3 bits of the high byte of counter
-            if (sample == 0) return (byte)( Width>>1 ); //increment on even numbers
-            else return (byte)( -1*(Width>>1)-(Width&1) ); //increment on odd numbers
+            if (nSamples == 0) {
+                sample = (byte)(Samples[Counter>>18]+8); //get nybble via high 6 bits of counter
+                sample = (byte)( (sample>>( (Counter>>16)&7 ))&1 ); //get bit as addressed by lower 3 bits of the high byte of counter
+                if (sample == 0) return (byte)( Width>>1 ); //increment on even numbers
+                else return (byte)( -1*(Width>>1)-(Width&1) ); //increment on odd numbers
+            }
+            else {
+                sample = Samples[Counter>>18];
+                if (sample >= Width>>1) return (byte)( Width>>1 ); //increment on even numbers
+                else if (sample <= -1*(Width>>1)-(Width&1)) return (byte)( -1*(Width>>1)-(Width&1) ); //increment on odd numbers
+                return sample;
+            }
         }
         else sample = Samples[getSampleIndex(nSamples, Width, Counter)]; //look up sample
         return sample;
@@ -195,40 +217,25 @@ public class ChannelType1 {
         Counter += Stepper;
         if (Counter > MaxCount) {
             Counter &= MaxCount;
-            if (Noise) {
-//                //first good one
-//                for (int i=0; i<Samples.length; ++i) {
-//                    //nybble transformation multiplies noise sample length by 16
-//                    //from 256 to a more respectable 4096
-//                    //aww man there's still a ringing
-//                    Samples[i] += 8;
-//                    Samples[i] += ((i<<1)+1)&15; //add an odd number
-//                    Samples[i] &= 15;
-//                    Samples[i] -= 8;
-//                }
-                
-//                for (int i=0; i<Samples.length; i+=2) {
-//                    //from 256 to (maybe) 2^16
-//                    short s = (short)((Samples[i]+8)+(Samples[i+1]+8)<<4); //work with 8 bit chunks (little endian)
-//                    s *= i+5;
-//                    s &= 255;
-//                    Samples[i] = (byte)((s&15)-8);
-//                    Samples[i+1] = (byte)( ( (s>>4)&15) - 8 );
-//                }
-                
-                //still ringing
-                byte[] bites = Samples.clone();
-                Samples[0] += 8;
-                Samples[0] += bites[Samples.length-1]+8;
-                Samples[0] &= 15;
-                Samples[0] -= 8;
-                for (int i=1; i<Samples.length; ++i) {
-                    if (bites[i-1] == 0 || bites[i-1] == -8) bites[i-1] += 1;
-                    Samples[i] += 8;
-                    Samples[i] += bites[i-1]+8;
-                    Samples[i] &= 15;
-                    Samples[i] -= 8;
+            if (Noise && nSamples != 0) {
+                //64-bit hash and shift
+                //2^256 different states
+                //theoretically some type of cycle but I don't know how long that might be
+                for (int i=0; i<Samples.length/16; ++i) {
+                    long l = 0;
+                    for (int j=0; j<16; ++j) {
+                        l += HashTable[j][Samples[i*16+j] + 8];
+                    }
+                    for (int j=0; j<16; ++j) {
+                        Samples[i*16+j] = (byte)( (l&15) - 8 );
+                        l >>= 4;
+                    }
                 }
+                byte b = Samples[0];
+                for (int i=0; i<Samples.length-1; ++i) {
+                    Samples[i] = Samples[i+1];
+                }
+                Samples[Samples.length-1] = b;
             }
         }
     }
