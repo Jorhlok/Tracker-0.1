@@ -54,30 +54,36 @@ public class ChannelModel1 {
     }
     
     public int getStepper() {
-        return 0;
+        return Stepper;
     }
     
     public byte getStereo() {
-        return 0;
+        return Stereo;
     }
     
     public byte getVolume() {
-        return 0;
+        return Volume;
     }
     
     public byte getWidth() {
-        return 0;
+        return Width;
     }
     
     public boolean getNoise() {
         return false;
     }
     
-    public byte[] getSamples() {
-        return null;
+    public short getSamples() {
+        if (Instrument != null) {
+            return Instrument.PCM4[getVolume()];
+        }
+        return 0;
     }
     
     public byte getNSamples() {
+        if (Instrument != null) {
+            return Instrument.PCMLength[getVolume()];
+        }
         return 0;
     }
 }

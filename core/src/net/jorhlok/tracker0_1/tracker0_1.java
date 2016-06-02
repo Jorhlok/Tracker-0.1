@@ -9,7 +9,6 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator.FreeTypeFontParameter;
-import net.jorhlok.jpsg.JPSG;
 import net.jorhlok.tracker0_1.jorhtrackpack.jti;
 import net.jorhlok.tracker0_1.jorhtrackpack.jtpfile;
 import net.jorhlok.tracker0_1.jorhtrackpack.jts;
@@ -208,7 +207,6 @@ public class tracker0_1 extends ApplicationAdapter {
         aplay.pr = new PlayRoutine();
         aplay.pr.data = jtp;
         aplay.pr.track = 0;
-//        aplay.chip = new JPSG(JPSG.Models.JPSG1608M);
         if (audio == null) {
             //GDX only implementation, you might stutter
             System.err.println("Using GDX only audio device, might have stuttering.");

@@ -19,6 +19,14 @@ public class PlayRoutine {
     public int counts;
     
     public ChannelModel1[] Channels1;
+    public ChannelModel1 Chan10 = new ChannelModel1();
+    public ChannelModel1 Chan11 = new ChannelModel1();
+    public ChannelModel1 Chan12 = new ChannelModel1();
+    public ChannelModel1 Chan13 = new ChannelModel1();
+    public ChannelModel1 Chan14 = new ChannelModel1();
+    public ChannelModel1 Chan15 = new ChannelModel1();
+    public ChannelModel1 Chan16 = new ChannelModel1();
+    public ChannelModel1 Chan17 = new ChannelModel1();
     /*
     I have concluded that objects inside aplay 
         cannot access their own arrays 
@@ -38,21 +46,42 @@ public class PlayRoutine {
     }
     
     public void update() {
-        System.err.println("pr.update();");
+//        System.err.println("pr.update();");
         frame f = data.Track[track].Frame[frame];
-        System.err.println("read frame");
-        Channels1[0].Instrument = data.Instrument[0];
-        System.err.println("read instrument");
+//        System.err.println("read frame");
+//        Channels1[0].Instrument = data.Instrument[0];
+//        System.err.println("read instrument");
         if (counter == 0) {
             insPattern patt = data.Track[0].InsPattern[ f.InsPattern[0] ];
-            System.err.println("int note = parseNote(patt.Note[line]);");
-            int note = parseNote(patt.Note[line]);
-            if (note >= 0) {
-                Channels1[0].Stepper = note;
-                Channels1[0].Retrig = true;
+//            System.err.println("int note = parseNote(patt.Note[line]);");
+            int tmp = parseNote(patt.Note[line]);
+            if (tmp >= 0) {
+                Chan10.Stepper = tmp;
+                Chan10.Retrig = true;
+                System.err.println("step");
+            }
+            tmp = patt.Stereo[line];
+            if (tmp >= 0) {
+                Chan10.Stereo = (byte)tmp;
+                System.err.println("stereo");
+            }
+            tmp = patt.Volume[line];
+            if (tmp >= 0) {
+                Chan10.Volume = (byte)tmp;
+                System.err.println("volume");
+            }
+            tmp = patt.Width[line];
+            if (tmp >= 0) {
+                Chan10.Width = (byte)tmp;
+                System.err.println("width");
+            }
+            tmp = patt.Instrument[line];
+            if (tmp >= 0) {
+                Chan10.Instrument = data.Instrument[tmp];
+                System.err.println("ins");
             }
         }
-        System.err.println("updated stuff or not " + Integer.toString(counter));
+//        System.err.println("updated stuff or not " + Integer.toString(counter));
         
 //        Channels1[0].step();
 //        for (ChannelModel1 m : Channels1) {
