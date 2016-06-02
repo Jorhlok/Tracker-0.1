@@ -11,7 +11,7 @@ import net.jorhlok.jpsg.JPSG;
 public class AsyncPlay implements AsyncTask {
     
     public PlayRoutine pr;
-    public JPSG chip = new JPSG(JPSG.Models.JPSG1609S);
+    public JPSG chip = new JPSG(JPSG.Models.JPSG1608S);
     public short[] output;
     public int buffer = 44100/60;
     public ChannelType1 ch = new ChannelType1();
@@ -24,59 +24,33 @@ public class AsyncPlay implements AsyncTask {
     public Object use() {
 //        System.err.println("aplay.call();");
         if (chip == null || pr == null) return -1;
-//        System.err.println(Arrays.toString(ch.getSamples()));
         pr.update();
-//        System.err.println("pr.update(); //done");
-//        chip.setStepper( 0, (int)Math.round(440.0/44100*(1<<24) ) );//pr.Channels1[0].Stepper);
-//        ch.setStepper( (int)Math.round(440.0/44100*(1<<24) ) );//pr.Channels1[0].Stepper);
-//        ch.setStepper(pr.parseNote(pr.data.Track[0].InsPattern[0].Note[0]));
-//        chip.setStepper(0,pr.parseNote(pr.data.Track[0].InsPattern[0].Note[0]));
-//        chip.setStepper(1,pr.parseNote(pr.data.Track[0].InsPattern[1].Note[0]));
-//        chip.setStepper(0,0x040000);
-//        System.err.println("setstep");
-//        chip.setSamples(0, pr.data.PCM4[15]);
-//        ch.setSamples(pr.data.PCM4[Math.max(0, pr.data.Track[0].InsPattern[0].Volume[0] )]);
-//        chip.setSamples(0,pr.data.PCM4[Math.max(0, pr.data.Track[0].InsPattern[0].Volume[0] )]);
-//        chip.setSamples(1,pr.data.PCM4[Math.max(0, pr.data.Track[0].InsPattern[1].Volume[0] )]);
-//        System.err.println("setsamp");
-//        chip.setnSamples(0, 2);
-//        chip.setnSamples(1, 2);
-//        ch.setnSamples(2);
-//        System.err.println("setn");
-//        chip.setStereo(1, new int[] {2,1,0,0 ,0,0,0,0});
-//        System.err.println("sets");
-//        if (ch.getWidth() <= 0) ch.setWidth(15);
-//        else ch.setWidth(ch.getWidth()-1);
-//        if (chip.getWidth(0) <= 0) chip.setWidth(0,15);
-//        else chip.setWidth(0,chip.getWidth(0)-1);
-//        ch.setWidth(pr.data.Track[0].InsPattern[0].Width[0]);
-//        chip.setWidth(0,pr.data.Track[0].InsPattern[0].Width[0]);
-//        chip.setWidth(1,pr.data.Track[0].InsPattern[1].Width[0]);
-//        System.err.println("setw");
-//        ch.setNoise(true);
-//        chip.setNoise(new int[] {1,-1,-1,-1 ,-1,-1,-1,-1});
-//        System.err.println("setnz");
 
-        chip.setStepper(0, pr.Chan10.getStepper());
-        if (pr.Chan10.Retrig) {
-            pr.Chan10.Retrig = false;
-            chip.setCounter(0, 0);
+        int[] stereo = new int[pr.Channels1.length];
+        int[] noise = new int[pr.Channels1.length];
+        for (int i=0; i<pr.Channels1.length; ++i) {
+            chip.setStepper(i, pr.Channels1[i].getStepper());
+            if (pr.Channels1[i].Retrig) {
+                pr.Channels1[i].Retrig = false;
+                chip.setCounter(i, 0);
+            }
+            chip.setSamples(i, pr.data.PCM4[pr.Channels1[i].getSamples()]);
+            chip.setnSamples(i, pr.Channels1[i].getNSamples());
+            chip.setWidth(i, pr.Channels1[i].getWidth());
+            stereo[i] = pr.Channels1[i].getStereo();
+            noise[i] = pr.Channels1[i].getNoise()?1:0;
         }
-        chip.setStereo(1, new int[] {pr.Chan10.getStereo(),-1,-1,-1 ,-1,-1,-1,-1});
-        chip.setSamples(0, pr.data.PCM4[pr.Chan10.getSamples()]);
-        chip.setnSamples(0, pr.Chan10.getNSamples());
-        chip.setWidth(0, pr.Chan10.getWidth());
-        chip.setNoise(new int[] { (pr.Chan10.getNoise()?1:0) ,-1,-1,-1 ,-1,-1,-1,-1});
+        
+//        System.err.println("updated chip");
+        
+        chip.setStereo(1, stereo);
+        chip.setNoise(noise);
         
         output = new short[buffer*2];
-//        System.err.println("output = new short[buffer*2];");
         short[] samp;
         for (int i=0; i<output.length; i+=2) {
             chip.step();
             samp = chip.output();
-//            ch.step();
-//            samp = new short[2];
-//            samp[0] = samp[1] = (short)(ch.output()*2000);
             if (samp == null || samp.length != 2) return -2;
             output[i] = samp[0];
             output[i+1] = samp[1];

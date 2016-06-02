@@ -12,10 +12,10 @@ public class ChannelModel1 {
     public boolean Retrig = false;
     public boolean Release = false;
     public int Stepper = 0;
-    public int Note = 0; // 0 to 12^5-1 or 248831
-    public byte Stereo = 3;
-    public byte Volume = 15;
-    public byte Width = 15;
+//    public int Note = 0; // 0 to 12^5-1 or 248831
+    public byte Stereo = 0;
+    public byte Volume = 0;
+    public byte Width = 0;
     public short EnvelopeIndex = 0;
     public char Effect = ' '; // Alphanumeric + Punctuation 20-7E
     public byte FX1 = 0; // 0-F (-1 for null)
@@ -66,6 +66,7 @@ public class ChannelModel1 {
     }
     
     public byte getWidth() {
+        if (getNoise()) return getVolume();
         return Width;
     }
     
