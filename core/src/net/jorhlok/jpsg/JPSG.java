@@ -23,8 +23,6 @@
  */
 package net.jorhlok.jpsg;
 
-import java.util.Arrays;
-
 /**
  * This class simulates JPSG line of chips which happen to be hypothetical.
  * I say simulate rather than emulate owing to use of an api rather than some binary transfer protocol.

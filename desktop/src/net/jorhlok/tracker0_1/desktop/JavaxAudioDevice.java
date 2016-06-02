@@ -105,10 +105,16 @@ public class JavaxAudioDevice implements AudioInterface, LineListener {
                     underflow = true;
                     quit = true;
                 }
-                byteBuf = new byte[curBuf.length*4];
-                for (int i=0; i<curBuf.length; ++i) {
-                    byteBuf[i*4] = byteBuf[i*4+2] = (byte)curBuf[i];
-                    byteBuf[i*4+1] = byteBuf[i*4+3] = (byte)(curBuf[i]>>8);
+                byteBuf = new byte[curBuf.length*2];
+                for (int i=0; i<curBuf.length; i+=1) {
+                    if ( (i&1) == 0) {
+                        byteBuf[i*2] = (byte)curBuf[i];
+                        byteBuf[i*2+1] = (byte)(curBuf[i]>>8);
+                    }
+                    else {
+                        byteBuf[i*2] = (byte)curBuf[i];
+                        byteBuf[i*2+1] = (byte)(curBuf[i]>>8);
+                    }
                 }
                 Output.write(byteBuf, 0, byteBuf.length);
             }
