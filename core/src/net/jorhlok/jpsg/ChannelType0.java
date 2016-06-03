@@ -24,15 +24,22 @@
 package net.jorhlok.jpsg;
 
 /**
- * Channel Type 0 "8-bit PCM Bit Bang"
+ * Channel Type 0 "8-bit PCM"
  * 
- * Waveform modulation done by the play routine.
+ * Waveform modulation done from a buffer of 256 bytes.
  * Includes ghetto 3-bit volume that happens to be logarithmic by bit shifting.
  * @author jorh
  */
 public class ChannelType0 {
+    static private final int MaxCount = (1 << 24) - 1; //24 bit counter 0 to 2^24-1
+    private final byte[] Buffer = new byte[256];
     private byte Volume = 0; //0-7 (ghetto volume control)
-    private byte Sample = 0; //The stored sample
+    private short Loop = 255;
+    private int Counter = 0;
+    private int Stepper = 0;
+    
+    @Deprecated
+    private byte Sample = 0;
 
     public byte getVolume() {
         return Volume;
@@ -42,16 +49,74 @@ public class ChannelType0 {
         Volume = (byte)(v&7);
     }
 
+    public short getLoop() {
+        return Loop;
+    }
+
+    public void setLoop(int l) {
+        Loop = (short)(l&255);
+    }
+
+    @Deprecated
     public byte getSample() {
         return Sample;
     }
 
+    @Deprecated
     public void setSample(int s) {
         Sample = (byte)s;
     }
     
+    public byte[] getBuffer() {
+        return Buffer.clone();
+    }
+
+    public void setBuffer(byte[] sam) {
+        for (byte i = 0; i < sam.length && i < 64; ++i) {
+            if (sam[i] > 0) {
+                Buffer[i] = (byte) Math.min(sam[i], 7);
+            } else {
+                Buffer[i] = (byte) Math.max(sam[i], -8);
+            }
+        }
+    }
+    
+    public int getCounter() {
+        return Counter;
+    }
+
+    public void setCounter(int c) {
+        if (c < 0) {
+            Counter = 0;
+        } else if (c > MaxCount) {
+            Counter = MaxCount;
+        } else {
+            Counter = c;
+        }
+    }
+
+    public int getStepper() {
+        return Stepper;
+    }
+
+    public void setStepper(int s) {
+        if (s < 0) {
+            Stepper = 0;
+        } else if (s > MaxCount) {
+            Stepper = MaxCount;
+        } else {
+            Stepper = s;
+        }
+    }
+    
     public byte output() {
-        if (Sample >= 0) return (byte)( Sample>>(7-Volume) );
-        else return (byte)( -1*( (-1*Sample)>>(7-Volume) ) );
+        byte sample = Buffer[Counter>>16];
+        if (sample >= 0) return (byte)( sample>>(7-Volume) );
+        else return (byte)( -1*( (-1*sample)>>(7-Volume) ) );
+    }
+    
+    public void step() {
+        Counter += Stepper;
+        if (Counter > MaxCount) Counter = Loop<<16;
     }
 }

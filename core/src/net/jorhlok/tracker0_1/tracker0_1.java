@@ -261,7 +261,7 @@ public class tracker0_1 extends ApplicationAdapter {
  * 0123456789012345678901234567890123456789012345678901234567890123456789
  * ssssssSVWiiEXY (std channel) (stepper Stereo Volume pulseWidth instrument Effects XY)
  * 123456789ABCDE (14)
- * llllllooww (pcm channel) (length/stepper options waveform)
+ * llllllSVww (pcm channel) (length/stepper Stereo Volume waveform)
  * 123456789A (10)
  * 122 wide
  * 32 tall
