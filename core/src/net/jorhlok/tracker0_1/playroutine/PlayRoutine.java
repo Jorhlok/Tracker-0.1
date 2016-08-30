@@ -60,7 +60,7 @@ public class PlayRoutine {
                 }
                 tmp = patt.Instrument[line];
                 if (tmp >= 0) {
-                    Channels1[i].Instrument = data.Instrument[tmp];
+                    Channels1[i].Instrument = data.InsType1[tmp];
                     System.err.println("ins");
                 }
             }

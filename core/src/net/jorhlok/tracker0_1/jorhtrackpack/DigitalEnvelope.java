@@ -5,10 +5,10 @@ package net.jorhlok.tracker0_1.jorhtrackpack;
  * @author jorh
  */
 public class DigitalEnvelope {
-    protected byte[] Envelope;
-    protected byte ValueMax;
-    protected byte ValueMin;
-    protected byte ValueNull;
+    protected int[] Envelope;
+    protected int ValueMax;
+    protected int ValueMin;
+    protected int ValueNull;
     protected byte TimeScaler;
     protected short LoopPoint; //the first point in the loop or no loop if it's the same as the sustain point
     protected short SustainPoint; //also acts as the last value in the loop
@@ -18,13 +18,20 @@ public class DigitalEnvelope {
     protected byte CurrentCounter;
     
     public DigitalEnvelope() {
-        Envelope = new byte[1];
+        Envelope = new int[1];
         Envelope[0] = 0;
         ValueMax = 1;
         ValueMin = ValueNull = 0;
         TimeScaler = 1;
         LoopPoint = SustainPoint = EndPoint = 0;
         CurrentPoint = CurrentCounter = 0;
+    }
+    
+    public DigitalEnvelope(int max, int min, int nul) {
+        this();
+        ValueMax = max;
+        ValueMin = min;
+        Envelope[0] = ValueNull = nul;
     }
     
     public void step(int steps) {
@@ -43,44 +50,53 @@ public class DigitalEnvelope {
         }
     }
     
-    public byte getValue() {
+    public int getValue() {
         if (CurrentPoint >= Envelope.length || CurrentPoint < 0)
             return ValueNull;
         return Envelope[CurrentPoint];
     }
     
     
-    public byte[] getEnvelope() {
+    public int[] getEnvelope() {
         return Envelope.clone();
     }
 
-    public void setEnvelope(byte[] Envelope) {
-        this.Envelope = new byte[Envelope.length];
+    public void setEnvelope(int[] Envelope) {
+        this.Envelope = new int[Envelope.length];
         for (int i=0; i<this.Envelope.length; ++i)
-            this.Envelope[i] = (byte)Math.min(ValueMax, Math.max(ValueMin, Envelope[i]));
+            this.Envelope[i] = Math.min(ValueMax, Math.max(ValueMin, Envelope[i]));
+    }
+    
+    public void setValueBounds(int max, int min, int nul) {
+       ValueMax = max;
+       ValueMin = min;
+       ValueNull = nul;
+       setEnvelope(getEnvelope()); //re-check envelope
     }
 
-    public byte getValueMax() {
+    public int getValueMax() {
         return ValueMax;
     }
 
-    public void setValueMax(byte ValueMax) {
+    public void setValueMax(int ValueMax) {
         this.ValueMax = ValueMax;
+        setEnvelope(getEnvelope()); //re-check envelope
     }
 
-    public byte getValueMin() {
+    public int getValueMin() {
         return ValueMin;
     }
 
-    public void setValueMin(byte ValueMin) {
+    public void setValueMin(int ValueMin) {
         this.ValueMin = ValueMin;
+        setEnvelope(getEnvelope()); //re-check envelope
     }
 
-    public byte getValueNull() {
+    public int getValueNull() {
         return ValueNull;
     }
 
-    public void setValueNull(byte ValueNull) {
+    public void setValueNull(int ValueNull) {
         this.ValueNull = ValueNull;
     }
 

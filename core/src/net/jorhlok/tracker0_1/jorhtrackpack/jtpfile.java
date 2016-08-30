@@ -8,22 +8,43 @@ public class jtpfile {
     public String Name;
     public String Author;
     public String Comment;
+    public String Version;
+    public final String[] RecognizedVersions = {
+            //"0.2",
+            "0.1"
+        };
+    
     public jts[] Track;
     public byte[][] PCM4; // -8 to 7
     public byte[][] PCM8; // -128 to 127
-    public jti[] Instrument;
+    public jti[] InsType0;
+    public jti[] InsType1;
     
     public jtpfile() {
+        Version = RecognizedVersions[0];
         Name = Author = Comment = null;
         Track = new jts[256];
         PCM4 = new byte[4096][];
         PCM8 = new byte[256][];
-        Instrument = new jti[256];
+        InsType0 = new jti[256];
+        InsType1 = new jti[256];
     }
 
     public void newTrack(int i) {
         if (i >= 0 && i < 256) {
             Track[i] = new jts();
+        }
+    }
+    
+    public void newInsType0(int i) {
+        if (i >= 0 && i < 256) {
+            InsType0[i] = new jti();
+            InsType0[i].EnvVolume.setValueBounds(7, 0, 0);
+        }
+    }
+    public void newInsType1(int i) {
+        if (i >= 0 && i < 256) {
+            InsType1[i] = new jti();
         }
     }
 }
@@ -35,7 +56,7 @@ public class jtpfile {
  * 00.jts           (first track with its own frames/patterns)
  * 01.jts           (second track with its own...)
  * ...
- * 0a.jts           (tenth track...)
+ * 0A.jts           (tenth track...)
  * ...
  * 000.hp4          (first raw 4-bit pcm in ascii hexadecimal for an instrument)
  * 001.hp4

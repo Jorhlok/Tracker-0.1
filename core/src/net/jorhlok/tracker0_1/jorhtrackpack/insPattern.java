@@ -2,7 +2,6 @@ package net.jorhlok.tracker0_1.jorhtrackpack;
 
 /**
  * Pattern of standard instruments
- *
  * @author jorh
  */
 public class insPattern {
