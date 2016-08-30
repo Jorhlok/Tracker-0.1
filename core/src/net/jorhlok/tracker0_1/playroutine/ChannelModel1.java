@@ -76,7 +76,7 @@ public class ChannelModel1 {
     
     public short getSamples() {
         if (Instrument != null) {
-            return Instrument.PCM4[getVolume()];
+            return Instrument.PCM[getVolume()];
         }
         return 0;
     }

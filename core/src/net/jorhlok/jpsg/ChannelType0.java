@@ -26,15 +26,15 @@ package net.jorhlok.jpsg;
 /**
  * Channel Type 0 "8-bit PCM"
  * 
- * Waveform modulation done from a buffer of 256 bytes.
+ * Waveform modulation done from a buffer of X bytes.
  * Includes ghetto 3-bit volume that happens to be logarithmic by bit shifting.
  * @author jorh
  */
 public class ChannelType0 {
     static private final int MaxCount = (1 << 24) - 1; //24 bit counter 0 to 2^24-1
-    private final byte[] Buffer = new byte[256];
+    private byte[] Buffer = new byte[1024];
     private byte Volume = 0; //0-7 (ghetto volume control)
-    private short Loop = 255;
+    private short Loop = 0;
     private int Counter = 0;
     private int Stepper = 0;
     
@@ -72,11 +72,11 @@ public class ChannelType0 {
     }
 
     public void setBuffer(byte[] sam) {
-        for (byte i = 0; i < sam.length && i < 64; ++i) {
+        for (byte i = 0; i < sam.length && i < Buffer.length; ++i) {
             if (sam[i] > 0) {
-                Buffer[i] = (byte) Math.min(sam[i], 7);
+                Buffer[i] = (byte) Math.min(sam[i], 127);
             } else {
-                Buffer[i] = (byte) Math.max(sam[i], -8);
+                Buffer[i] = (byte) Math.max(sam[i], -128);
             }
         }
     }
@@ -110,7 +110,7 @@ public class ChannelType0 {
     }
     
     public byte output() {
-        byte sample = Buffer[Counter>>16];
+        byte sample = Buffer[Counter/(MaxCount+1)*Buffer.length];
         if (sample >= 0) return (byte)( sample>>(7-Volume) );
         else return (byte)( -1*( (-1*sample)>>(7-Volume) ) );
     }

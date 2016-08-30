@@ -24,6 +24,9 @@ public class saveload extends page {
     Color fg4;
     Color flc;
     Color bgc;
+    
+    String PathLoad;
+    String PathSave;
 
     @Override
     public void draw(Batch batch, BitmapFont font, float deltaTime) {

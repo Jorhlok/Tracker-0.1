@@ -1,7 +1,5 @@
 package net.jorhlok.tracker0_1.jorhtrackpack;
 
-import com.badlogic.gdx.files.FileHandle;
-
 /**
  * Jorhlok Track Pack File
  * @author jorh
@@ -28,14 +26,6 @@ public class jtpfile {
             Track[i] = new jts();
         }
     }
-    
-    public void load(FileHandle file) {
-        
-    }
-    
-    public void save(FileHandle file) {
-        
-    }
 }
 
 /**
@@ -45,13 +35,18 @@ public class jtpfile {
  * 00.jts           (first track with its own frames/patterns)
  * 01.jts           (second track with its own...)
  * ...
+ * 0a.jts           (tenth track...)
+ * ...
  * 000.hp4          (first raw 4-bit pcm in ascii hexadecimal for an instrument)
  * 001.hp4
  * ...
  * 00.hp8           (first raw 8-bit pcm in ascii big-endian hexadecimal for drums or other samples)
  * 01.hp8
  * ...
- * 00.jti           (first instrument data including desired samples and optional envelopes and intrinsic effects)
- * 01.jti
+ * 00.ji0           (first ChannelType0 instrument data including desired samples and optional envelopes and intrinsic effects)
+ * 01.ji0
+ * ...
+ * 00.ji1           (first ChannelType1 instrument data including desired samples and optional envelopes and intrinsic effects)
+ * 01.ji1
  * ...
  */

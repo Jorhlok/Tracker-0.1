@@ -2,9 +2,11 @@ package net.jorhlok.tracker0_1.jorhtrackpack;
 
 /**
  * Jorhlok Tracker Instrument
+ * Works with ChannelType0 and ChannelType1
  * @author jorh
  */
 public class jti {
+    //try making an envelope class
     public byte[] SEnvelope; // 0-3
     public byte[] VEnvelope; // 0-F
     public byte[] WEnvelope; // 0-F
@@ -20,8 +22,8 @@ public class jti {
     public short SLoop; // 0-FF
     public short VLoop; // 0-FF
     public short WLoop; // 0-FF
-    public short[] PCM4; // 0-FFF
-    public byte[] PCMLength; //0-40 (64)
+    public short[] PCM; // 0-FF or 0-FFF
+    public byte[] PCMLength; //0-3FF (1023) or 0-40 (64)
     public char[] Effect; // Alphanumeric + Punctuation 20-7E (32-126)
     public byte[] FX1; // 0-F
     public byte[] FX2; // 0-F
@@ -43,8 +45,8 @@ public class jti {
         SLength = 0;
         VLength = 0;
         WLength = 0;
-        PCM4 = new short[16]; //0-4095
-        for (short s : PCM4) { s = -1; }
+        PCM = new short[16]; //0-4095
+        for (short s : PCM) { s = -1; }
         PCMLength = new byte[16];
         for (byte b : PCMLength) { b = 0; }
         Effect = new char[16];
