@@ -9,7 +9,6 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator.FreeTypeFontParameter;
-import net.jorhlok.tracker0_1.jorhtrackpack.jti;
 import net.jorhlok.tracker0_1.jorhtrackpack.jtpfile;
 import net.jorhlok.tracker0_1.jorhtrackpack.jts;
 import net.jorhlok.tracker0_1.playroutine.AudioInterface;
