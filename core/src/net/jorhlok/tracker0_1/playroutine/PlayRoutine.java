@@ -30,13 +30,11 @@ public class PlayRoutine {
     }
     
     public void update() {
-//        System.err.println("pr.update();");
 
         frame f = data.Track[track].Frame[frame];
         if (counter == 0) {
             for (int i=0; i<Channels1.length; ++i) {
                 insPattern patt = data.Track[0].InsPattern[ f.InsPattern[i] ];
-    //            System.err.println("int note = parseNote(patt.Note[line]);");
                 int tmp = parseNote(patt.Note[line]);
                 if (tmp >= 0) {
                     Channels1[i].Stepper = tmp;
@@ -75,7 +73,6 @@ public class PlayRoutine {
             counter = 0;
             System.err.println(line);
         }
-//        System.err.println("pr.update(); //done");
     }
     
     public int parseNote(String n) {

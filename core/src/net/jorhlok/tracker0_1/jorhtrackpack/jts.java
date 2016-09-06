@@ -19,9 +19,16 @@ public class jts {
     
     public String TargetChip;
     public short PatternLength; //0-FF
+    
+    @Deprecated
     public short UpdatesPerSecond; // 0-FF updates to the chip per second
+    @Deprecated
     public boolean NPSorUPN; // below is Notes Per Second (false) or Updates Per Note (true)
+    @Deprecated
     public short NoteFrequency; // 0-FF
+    public float SampleRate;
+    public int SamplesPerUpdate;
+    public byte[] NoteUpdatePattern; //{7,8} for 8 NPS at 60 UPS
     
     public jts() {
         Name = Author = Comment = null;
@@ -42,7 +49,78 @@ public class jts {
     
     @Override
     public String toString() {
-        return null;
+        //optional information
+        String ret = "#Name: \"";
+        if (Name != null) ret += Name;
+        ret += "\"\n#By: \"";
+        if (Author != null) ret += Author;
+        ret += "\"\n";
+        if (Comment != null) {
+            ret += "#";
+            ret += Comment.replaceAll("\n", "\n#") + "\n\n";
+        }
+        //play settings
+        ret += "Settings {\n\tTargetChip = \"";
+        if (TargetChip != null) ret += TargetChip;
+        ret += "\"";
+        ret += "\n\tLength = ";
+        ret += Integer.toHexString(Length).toUpperCase();
+        ret += "\n\tPatternLength = ";
+        ret += Integer.toHexString(PatternLength).toUpperCase();
+        ret += "\n\tSampleRate = ";
+        ret += Float.toString(SampleRate); //only non-int and only decimal
+        ret += "\n\tSamplesPerUpdate = ";
+        ret += Integer.toHexString(SamplesPerUpdate).toUpperCase();
+        ret += "\n\tNoteUpdatePattern = { ";
+        if (NoteUpdatePattern != null && NoteUpdatePattern.length > 0) {
+            ret += Integer.toHexString(NoteUpdatePattern[0]);
+            for (int i=1; i<NoteUpdatePattern.length; ++i)
+                ret += ", " + Integer.toHexString(NoteUpdatePattern[i]);
+        }
+        else ret += "1";
+        ret += " }\n}\n\n";
+        //sequence
+        ret += "Track { ";
+        if (Sequence != null && Sequence.length > 0) {
+            ret += Integer.toHexString(Sequence[0]);
+            for (int i=1; i<Sequence.length; ++i)
+                ret += ", " + Integer.toHexString(Sequence[i]);
+        }
+        else ret += "00";
+        ret += " }\n\n";
+        //frames
+        if (Frame != null && Frame.length > 0) {
+            for (int i=0; i<Frame.length; ++i) {
+                if (Frame[i] != null) {
+                    if (i < 16) ret += "Frame 0";
+                    else ret += "Frame ";
+                    ret += Integer.toHexString(i) + Frame[i].toString() + "\n";
+                }
+            }
+        }
+        ret += "\n";
+        //patterns
+        if (InsPattern != null && InsPattern.length > 0) {
+            for (int i=0; i<InsPattern.length; ++i) {
+                if (InsPattern[i] != null) {
+                    if (i < 16) ret += "Pattern 0";
+                    else ret += "Pattern ";
+                    ret += Integer.toHexString(i) + InsPattern[i].toString() + "\n";
+                }
+            }
+        }
+        ret += "\n";
+        if (PCMPattern != null && PCMPattern.length > 0) {
+            for (int i=0; i<PCMPattern.length; ++i) {
+                if (PCMPattern != null) {
+                    if (i < 16) ret += "PCMPattern 0";
+                    else ret += "PCMPattern ";
+                    ret += Integer.toHexString(i) + InsPattern[i].toString() + "\n";
+                }
+            }
+        }
+        ret += "\n";
+        return ret;
     }
 
     public void newInsPattern(int i) {

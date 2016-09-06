@@ -16,6 +16,10 @@ public class frame {
     
     @Override
     public String toString() {
-        return null;
+        String ret = "{ " + Integer.toHexString(InsPattern[0]);
+        for (int i=1; i<InsPattern.length; ++i)
+            ret += ", " + Integer.toHexString(InsPattern[i]);
+        ret += ", " + Integer.toHexString(PCMPattern) + "}";
+        return ret;
     }
 }
