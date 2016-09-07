@@ -8,11 +8,14 @@ public class jtpfile {
     public String Name;
     public String Author;
     public String Comment;
-    public String Version;
     public final String[] RecognizedVersions = {
             //"0.2",
             "0.1"
         };
+    public final String[] RecognizedDescriptions = {
+        //"",
+        "This Jorh Track Pack file is zipped up instructions to make sweet music on a custom software synthesizer.\nMore info at jorhlok.net\n"
+    };
     
     public jts[] Track;
     public byte[][] PCM4; // -8 to 7
@@ -21,7 +24,6 @@ public class jtpfile {
     public jti[] InsType1;
     
     public jtpfile() {
-        Version = RecognizedVersions[0];
         Name = Author = Comment = null;
         Track = new jts[256];
         PCM4 = new byte[4096][];
@@ -40,12 +42,45 @@ public class jtpfile {
         if (i >= 0 && i < 256) {
             InsType0[i] = new jti();
             InsType0[i].EnvVolume.setValueBounds(7, 0, 0);
+            InsType0[i].HalfSupport = true;
         }
     }
     public void newInsType1(int i) {
         if (i >= 0 && i < 256) {
             InsType1[i] = new jti();
         }
+    }
+    
+    public String PCM4ToString(int index) {
+        if (index < 0 || index > 255 || PCM4[index] == null || PCM4[index].length < 1) return "";
+        String ret = "";
+        String str;
+        for (int i=0; i<PCM4[index].length; ++i) {
+            str = Integer.toHexString(PCM4[index][i]+8);
+            ret += str.charAt(str.length()-1);
+        }
+        return ret;
+    }
+    
+    public String PCM8ToString(int index) {
+        if (index < 0 || index > 255 || PCM8[index] == null || PCM8[index].length < 1) return "";
+        String ret = "";
+        String str;
+        for (int i=0; i<PCM8[index].length; ++i) {
+            str = Integer.toHexString(PCM8[index][i]+128);
+            while (str.length() < 2) str = "0" + str;
+            ret += str.substring(str.length()-2);
+        }
+        return ret;
+    }
+    
+    public String readmeString() {
+        String ret = "JTP version: \"" + RecognizedVersions[0]
+                + "\"\nName: \"" + Name 
+                + "\"\nAuthor: \"" + Author
+                + "\"\n" + Comment
+                + "\n\n\n" + RecognizedDescriptions[0] + "\n";
+        return ret;
     }
 }
 

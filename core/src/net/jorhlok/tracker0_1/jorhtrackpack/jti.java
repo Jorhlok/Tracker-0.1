@@ -6,13 +6,15 @@ package net.jorhlok.tracker0_1.jorhtrackpack;
  * @author jorh
  */
 public class jti {
-    //try making an envelope class
+    public boolean HalfSupport = false;
+    
     public final DigitalEnvelope EnvStereo = new DigitalEnvelope(3,0,0);
     public final DigitalEnvelope EnvVolume = new DigitalEnvelope(15,0,0); //7,0,0 for ChannelType0
     public final DigitalEnvelope EnvWidth = new DigitalEnvelope(15,0,0); // N/A for ChannelType0
     public final DigitalEnvelope EnvNoise = new DigitalEnvelope((1<<24)-1,0,0); // N/A for ChannelType0
     public short[] PCM; // 0-FF or 0-FFF
     public byte[] PCMLength; //0-3FF (1023) or 0-40 (64)
+        //ChannelType0 PCMLength map Start, Loop Begin, Loop End, End
     
     // N/A to ChannelType0
     public char[] Effect; // Alphanumeric + Punctuation 20-7E (32-126)
@@ -22,20 +24,55 @@ public class jti {
     
     public jti() {
         PCM = new short[16]; //0-4095
-        for (short s : PCM) { s = -1; }
+        for (int i=0; i<PCM.length; ++i) { PCM[i] = -1; }
         PCMLength = new byte[16];
-        for (byte b : PCMLength) { b = 0; }
+        for (int i=0; i<PCMLength.length; ++i) { PCMLength[i] = -1; }
         Effect = new char[16];
-        for (char c : Effect) { c = 0; }
-        FX1 = new byte[16];
-        for (byte b : FX1) { b = -1; }
-        FX2 = new byte[16];
-        for (byte b : FX2) { b = -1; }
+        for (int i=0; i<Effect.length; ++i) { Effect[i] = ' '; }
+        FX1 = new byte[Effect.length];
+        for (int i=0; i<FX1.length; ++i) { FX1[i] = -1; }
+        FX2 = new byte[Effect.length];
+        for (int i=0; i<FX2.length; ++i) { FX2[i] = -1; }
         FXLength = 0;
     }
     
     @Override
     public String toString() {
-        return null;
+        String ret = "";
+        String str;
+        int j, k;
+        str = EnvStereo.toString();
+        j = str.indexOf('\n');
+        k = str.lastIndexOf('\n');
+        ret += "#Stereo Envelope\n" + str.substring(j, k+1);
+        str = EnvVolume.toString();
+        j = str.indexOf('\n');
+        k = str.lastIndexOf('\n');
+        ret += "#Volume Envelope\n" + str.substring(j, k+1);
+        if (!HalfSupport) {
+            str = EnvWidth.toString();
+            j = str.indexOf('\n');
+            k = str.lastIndexOf('\n');
+            ret += "#Width Envelope\n" + str.substring(j, k+1);
+            str = EnvNoise.toString();
+            j = str.indexOf('\n');
+            k = str.lastIndexOf('\n');
+            ret += "#Noise Envelope\n" + str.substring(j, k+1);
+            ret += "#PCM map\n" + Integer.toHexString(PCM[0]);
+            for (int i=1; i<PCM.length; ++i)
+                ret += ", " + Integer.toHexString(PCM[i]);
+            ret += "\n" + Integer.toHexString(PCMLength[0]);
+            for (int i=1; i<PCMLength.length; ++i)
+                ret += ", " + Integer.toHexString(PCMLength[i]);
+            ret += "\n#Effects\n";
+            for (int i=0; i<Effect.length; ++i)
+                ret += Integer.toHexString(Effect[i]) + Integer.toHexString(FX1[i]) + Integer.toHexString(FX2[i]);
+        }
+        else {
+            ret += "#PCM map\n" + Integer.toHexString(PCM[0]) + "\n" + Integer.toHexString(PCMLength[0]);
+            for (int i=1; i<4; ++i)
+                ret += ", " + Integer.toHexString(PCMLength[i]);
+        }
+        return ret;
     }
 }

@@ -56,7 +56,6 @@ public class DigitalEnvelope {
         return Envelope[CurrentPoint];
     }
     
-    
     public int[] getEnvelope() {
         return Envelope.clone();
     }
@@ -146,5 +145,18 @@ public class DigitalEnvelope {
 
     public void setCurrentCounter(byte CurrentCounter) {
         this.CurrentCounter = CurrentCounter;
+    }
+    
+    @Override
+    public String toString() {
+        String ret = "{\t" + Integer.toHexString(ValueMax) + ", " + Integer.toHexString(ValueMin) + ", " + Integer.toHexString(ValueNull) + ",\n\t";
+        ret += Integer.toHexString(TimeScaler) + ", " + Integer.toHexString(LoopPoint) + ", " + Integer.toHexString(SustainPoint) + ", " + Integer.toHexString(EndPoint) + ",\n\t";
+        if (Envelope != null && Envelope.length > 0) {
+            ret += Integer.toHexString(Envelope[0]);
+            for (int i=1; i<Envelope.length; ++i)
+                ret += ", " + Integer.toHexString(Envelope[i]);
+        }
+        else ret += "0";
+        return ret + "\n}";
     }
 }
