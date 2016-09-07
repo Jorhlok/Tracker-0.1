@@ -86,8 +86,8 @@ public class tracker0_1 extends ApplicationAdapter {
         fg4 = new Color(1f, 0.5f, 0.3f, 1f); // red-orange
         fl1 = new Color(1f, 1f, 1f, 1f); // white
         fl2 = new Color(0f, 0f, 0f, 1f); // black
-        bgc = bg1;
-        flc = fl1;
+        bgc = new Color(bg1);
+        flc = new Color(fl1);
         
         strobe = 0;
         strobespeed = 5;
@@ -231,12 +231,9 @@ public class tracker0_1 extends ApplicationAdapter {
         strobe += Gdx.graphics.getDeltaTime();
         if (strobe > 0.05f*strobespeed) {
             strobe -= 0.05f*strobespeed;
-            if(flc == fl1) flc = fl2;
-            else flc = fl1;
+            if(flc.equals(fl1)) flc.set(fl2);
+            else flc.set(fl1);
         }
-        
-        PEdit.flc = SL.flc = flc;
-        PEdit.bgc = SL.bgc = bgc;
         
         PEdit.update();
         SL.update();
