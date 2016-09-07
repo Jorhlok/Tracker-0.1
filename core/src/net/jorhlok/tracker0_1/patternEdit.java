@@ -21,13 +21,6 @@ public class patternEdit extends page {
     int xCursor;
     int yCursor;
     
-    Color fg1;
-    Color fg2;
-    Color fg3;
-    Color fg4;
-    Color flc;
-    Color bgc;
-    
     public patternEdit() {
         super();
         

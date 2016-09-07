@@ -18,19 +18,40 @@ public class saveload extends page {
     int xCursor;
     int yCursor;
     
-    Color fg1;
-    Color fg2;
-    Color fg3;
-    Color fg4;
-    Color flc;
-    Color bgc;
+    String PathLoad = "~/Documents/jtp/a.jtp";
+    String PathSave = "~/Documents/jtp/a.jtp";
     
-    String PathLoad;
-    String PathSave;
+    public saveload() {
+        super();
+        xCursor = 0;
+        yCursor = 0;
+    }
+
+    @Override
+    public void update() {
+        
+    }
 
     @Override
     public void draw(Batch batch, BitmapFont font, float deltaTime) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        drawPath(batch, font, deltaTime, PathLoad, fg3, 8, 14*8, (yCursor == 0)?xCursor:-1);
+        drawButton(batch, font, deltaTime, "Load", fg4, 8, 14*9, yCursor == 1);
+        drawPath(batch, font, deltaTime, PathSave, fg1, 8, 14*11, (yCursor == 2)?xCursor:-1);
+        drawButton(batch, font, deltaTime, "Save", fg2, 8, 14*12, yCursor == 3);
     }
     
+    private void drawPath(Batch batch, BitmapFont font, float deltaTime, String path, Color col, int xoff, int yoff, int xc) {
+        font.setColor(col);
+        font.draw(batch, path, xoff, 464-yoff);
+        if (xc >= 0 && xc < path.length()) {
+            font.setColor(flc);
+            font.draw(batch, path.substring(xc, xc+1).replace(' ', '▄'), xoff+xc*8, 464-yoff);
+        }
+    }
+    
+    private void drawButton(Batch batch, BitmapFont font, float deltaTime, String button, Color col, int xoff, int yoff, boolean hilite) {
+        if (hilite) font.setColor(flc);
+        else font.setColor(col);
+        font.draw(batch, button, xoff, 464-yoff);
+    }
 }

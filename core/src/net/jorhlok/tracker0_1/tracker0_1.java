@@ -49,6 +49,7 @@ public class tracker0_1 extends ApplicationAdapter {
     
     jtpfile jtp;
     patternEdit PEdit;
+    saveload SL;
     
     AsyncPlay aplay;
     AudioInterface audio;
@@ -189,14 +190,16 @@ public class tracker0_1 extends ApplicationAdapter {
         jtp.InsType1[0].PCMLength[15] = 2;
         
         PEdit = new patternEdit();
-        PEdit.fg1 = fg1;
-        PEdit.fg2 = fg2;
-        PEdit.fg3 = fg3;
-        PEdit.fg4 = fg4;
-        PEdit.flc = flc;
-        PEdit.bgc = bgc;
+        SL = new saveload();
         
-        PEdit.jtp = jtp;
+        PEdit.fg1 = SL.fg1 = fg1;
+        PEdit.fg2 = SL.fg2 = fg2;
+        PEdit.fg3 = SL.fg3 = fg3;
+        PEdit.fg4 = SL.fg4 = fg4;
+        PEdit.flc = SL.flc = flc;
+        PEdit.bgc = SL.bgc = bgc;
+        
+        PEdit.jtp = SL.jtp = jtp;
         PEdit.Track = 0;
         PEdit.Frame = 0;
         
@@ -232,10 +235,11 @@ public class tracker0_1 extends ApplicationAdapter {
             else flc = fl1;
         }
         
-        PEdit.flc = flc;
-        PEdit.bgc = bgc;
+        PEdit.flc = SL.flc = flc;
+        PEdit.bgc = SL.bgc = bgc;
         
         PEdit.update();
+        SL.update();
         
         Gdx.gl.glClearColor(bgc.r,bgc.g,bgc.b,bgc.a);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
@@ -243,7 +247,8 @@ public class tracker0_1 extends ApplicationAdapter {
         
         batch.begin();
         
-        PEdit.draw(batch, font, Gdx.graphics.getDeltaTime());
+        //PEdit.draw(batch, font, Gdx.graphics.getDeltaTime());
+        SL.draw(batch, font, Gdx.graphics.getDeltaTime());
 
         batch.end();
     }

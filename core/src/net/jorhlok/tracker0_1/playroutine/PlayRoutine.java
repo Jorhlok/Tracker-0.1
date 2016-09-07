@@ -78,14 +78,14 @@ public class PlayRoutine {
     public int parseNote(String n) {
         if (n == null) return -1;
         String note = n.replace(':', ' ').trim();
+        if (n.equalsIgnoreCase("xxxxxx")) {
+            return 0;
+        }
         if (note.length() == 6) {
             int tmp = Integer.parseInt(note, 16);
             if (tmp > 0) return tmp;
         }
-        if (n.equalsIgnoreCase("xxxxxx")) {
-            return 0;
-        }
-        else if (note.length() == 3) {
+        if (note.length() == 3) {
             char letter = Character.toUpperCase(note.charAt(0));
             if (letter < 'A' || letter > 'G') return -1;
             byte offset;
