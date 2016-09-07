@@ -19,13 +19,7 @@ public class jts {
     
     public String TargetChip;
     public short PatternLength; //0-FF
-    
-    @Deprecated
-    public short UpdatesPerSecond; // 0-FF updates to the chip per second
-    @Deprecated
-    public boolean NPSorUPN; // below is Notes Per Second (false) or Updates Per Note (true)
-    @Deprecated
-    public short NoteFrequency; // 0-FF
+
     public float SampleRate;
     public int SamplesPerUpdate;
     public byte[] NoteUpdatePattern; //{7,8} for 8 NPS at 60 UPS
@@ -42,9 +36,6 @@ public class jts {
         
         TargetChip = "JPSG1609S"; //all the bells and whistles by default
         PatternLength = 32;
-        UpdatesPerSecond = 60;
-        NPSorUPN = false;
-        NoteFrequency = 8;
     }
     
     @Override
@@ -152,7 +143,9 @@ public class jts {
  * Comment
  * 
  * Target chip
+ * Length
  * Pattern Length
- * Updates per Second
- * Notes per Second or Updates per Note
+ * Sample rate
+ * Samples per update
+ * Note update pattern
  */

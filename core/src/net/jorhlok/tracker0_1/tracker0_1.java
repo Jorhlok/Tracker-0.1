@@ -290,9 +290,9 @@ public class tracker0_1 extends ApplicationAdapter {
  * 
  * Target chip
  * Pattern Length
- * Updates per Second
- * Notes per Second or Updates per Note
- * Number of Tracks
+ * Samplerate
+ * Samples per update
+ * Note update pattern
  * 
  * Additional Options
  * ==================
@@ -318,7 +318,7 @@ public class tracker0_1 extends ApplicationAdapter {
  * ==============================
  * PCM4 mapping (0-4095) (XYZ.hp4) (hexadecimal pcm 4-bit)
  * PCM8 mapping (0-255) (XY.hp8) (hexadecimal pcm 8-bit)
- * Instrument mapping (0-255) (XY.jti) (jorhlok tracker instrument)
+ * Instrument mapping (0-255) (XY.ji0) or (XY.ji1) (jorhlok tracker instrument)
  */
 
 /**
@@ -328,13 +328,18 @@ public class tracker0_1 extends ApplicationAdapter {
  * 00.jts           (first track with its own frames/patterns)
  * 01.jts           (second track with its own...)
  * ...
+ * 0A.jts           (tenth track...)
+ * ...
  * 000.hp4          (first raw 4-bit pcm in ascii hexadecimal for an instrument)
  * 001.hp4
  * ...
  * 00.hp8           (first raw 8-bit pcm in ascii big-endian hexadecimal for drums or other samples)
  * 01.hp8
  * ...
- * 00.jti           (first instrument data including desired samples and optional envelopes and intrinsic effects)
- * 01.jti
+ * 00.ji0           (first ChannelType0 instrument data including desired samples and optional envelopes and intrinsic effects)
+ * 01.ji0
+ * ...
+ * 00.ji1           (first ChannelType1 instrument data including desired samples and optional envelopes and intrinsic effects)
+ * 01.ji1
  * ...
  */
