@@ -48,6 +48,7 @@ public class tracker0_1 extends ApplicationAdapter {
     byte strobespeed; // 0-20 twentieths of a second
     
     jtpfile jtp;
+    page CurrentPage;
     patternEdit PEdit;
     saveload SL;
     
@@ -192,6 +193,8 @@ public class tracker0_1 extends ApplicationAdapter {
         PEdit = new patternEdit();
         SL = new saveload();
         
+        CurrentPage = SL;
+        
         PEdit.fg1 = SL.fg1 = fg1;
         PEdit.fg2 = SL.fg2 = fg2;
         PEdit.fg3 = SL.fg3 = fg3;
@@ -203,7 +206,7 @@ public class tracker0_1 extends ApplicationAdapter {
         PEdit.Track = 0;
         PEdit.Frame = 0;
         
-//        audio = null; //override desktop specific audio code
+        audio = null; //override desktop specific audio code
         
         aplay = new AsyncPlay();
         aplay.pr = new PlayRoutine();
@@ -223,7 +226,29 @@ public class tracker0_1 extends ApplicationAdapter {
     public void render () {
         for (int i=0; i<Inputty.Event.size; ++i) {
             System.out.println(Inputty.Event.get(i).toString());
-            PEdit.input(Inputty.Event.get(i));
+            if (Inputty.Event.get(i) == inputty.Events.CTRL_TAB.val) {
+                //trap ctrl+tab
+                //switch to sub-page
+                if (CurrentPage instanceof patternEdit) {
+                    
+                }
+                else if (CurrentPage instanceof saveload) {
+                    
+                }
+            }
+            else if (Inputty.Event.get(i) == inputty.Events.SHIFT_TAB.val) {
+                //trap shift+tab
+                //switch to next page
+                if (CurrentPage instanceof patternEdit) {
+                    CurrentPage = SL;
+                }
+                else if (CurrentPage instanceof saveload) {
+                    CurrentPage = PEdit;
+                }
+            }
+            else {
+                CurrentPage.input(Inputty.Event.get(i));
+            }
         }
         Inputty.Event.clear();
         
@@ -244,8 +269,9 @@ public class tracker0_1 extends ApplicationAdapter {
         
         batch.begin();
         
-        //PEdit.draw(batch, font, Gdx.graphics.getDeltaTime());
-        SL.draw(batch, font, Gdx.graphics.getDeltaTime());
+        CurrentPage.draw(batch, font, Gdx.graphics.getDeltaTime());
+//        PEdit.draw(batch, font, Gdx.graphics.getDeltaTime());
+//        SL.draw(batch, font, Gdx.graphics.getDeltaTime());
 
         batch.end();
     }
@@ -277,7 +303,7 @@ public class tracker0_1 extends ApplicationAdapter {
  */
 
 /**
- * Tab > swap page and subpage
+ * Ctrl+Tab > swap page and subpage
  * Shift+Tab > next page
  * Alphanumeric + symbols > enter appropriate data
  * Ctrl+S > overwrite file if applicable
