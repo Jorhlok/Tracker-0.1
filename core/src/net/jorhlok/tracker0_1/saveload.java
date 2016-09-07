@@ -13,10 +13,9 @@ import net.jorhlok.tracker0_1.jorhtrackpack.jtpfile;
 public class saveload extends page {
     jtpfile jtp;
     
-    int Width;
-    int Height;
     int xCursor;
     int yCursor;
+    boolean insert;
     
     String PathLoad = "~/Documents/jtp/a.jtp";
     String PathSave = "~/Documents/jtp/a.jtp";
@@ -25,11 +24,45 @@ public class saveload extends page {
         super();
         xCursor = 0;
         yCursor = 0;
+        insert = true;
     }
 
     @Override
     public void update() {
-        
+        while (Event.size > 0) {
+            byte b = Event.pop();
+            
+            if (b >= 32 && b <= 126) {
+                if (yCursor == 0) {
+                    
+                }
+                else if (yCursor == 2) {
+                    
+                }
+            }
+            else switch (b) {
+                case -5: //insert
+                    insert = !insert;
+                    break;
+                case -11: //up
+                    if (yCursor > 0) --yCursor;
+                    break;
+                case -12: //down
+                    if (yCursor < 3) ++yCursor;
+                    break;
+                case -13: //left
+                    if ((yCursor & 1) == 0) --xCursor;
+                    break;
+                case -14: //right
+                    if ((yCursor & 1) == 0) ++xCursor;
+                    break;
+            }
+            
+            if (yCursor == 0 && xCursor > PathLoad.length()) 
+                xCursor = PathLoad.length();
+            else if (yCursor == 2 && xCursor > PathSave.length())
+                xCursor = PathLoad.length();
+        }
     }
 
     @Override

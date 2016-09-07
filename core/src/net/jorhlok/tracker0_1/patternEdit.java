@@ -215,8 +215,7 @@ public class patternEdit extends page {
                     yCursor %= Height;
                 }
             }
-            else {
-                switch (b) {
+            else  switch (b) {
                 case -8: //TAB - go to next pattern
                     if (xCursor > 8*14-1) xCursor %= 14;
                     else xCursor += 14;
@@ -234,7 +233,6 @@ public class patternEdit extends page {
                 case -14: //RIGHT
                     if (++xCursor > Width-1) xCursor = 0;
                     break;
-                }
             }
         }
     }
