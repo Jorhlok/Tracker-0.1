@@ -68,7 +68,7 @@ public class AsyncAudioDevice implements AsyncTask, AudioInterface{
             if (uf) {
                 uf = false;
                 underflow = true;
-                System.err.println("underflow");
+//                System.err.println("underflow");
             }
             curBuf = aplay.output;
             if (disp) dispBuf = curBuf.clone(); //for scope visualization

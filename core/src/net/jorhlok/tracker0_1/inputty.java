@@ -28,7 +28,8 @@ public class inputty extends InputAdapter {
         DOWN(-12),
         LEFT(-13),
         RIGHT(-14),
-        CTRL_S(-15);
+        CTRL_S(-15),
+        DEL(-16);
         
         
         byte val;
@@ -47,6 +48,9 @@ public class inputty extends InputAdapter {
         switch (k) {
             case Input.Keys.BACKSPACE:
                 Event.add(Events.BACKSPACE.val);
+                break;
+            case Input.Keys.FORWARD_DEL:
+                Event.add(Events.DEL.val);
                 break;
             case Input.Keys.CONTROL_LEFT:
             case Input.Keys.CONTROL_RIGHT:

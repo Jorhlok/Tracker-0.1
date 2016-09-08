@@ -23,6 +23,8 @@ public class jtpfile {
     public jti[] InsType0;
     public jti[] InsType1;
     
+    public String Path;
+    
     public jtpfile() {
         Name = Author = Comment = null;
         Track = new jts[256];
@@ -81,6 +83,14 @@ public class jtpfile {
                 + "\"\n" + Comment
                 + "\n\n\n" + RecognizedDescriptions[0] + "\n";
         return ret;
+    }
+    
+    public boolean save() {
+        return false;
+    }
+    
+    public boolean load() {
+        return false;
     }
 }
 

@@ -37,6 +37,7 @@ public class tracker0_1 extends ApplicationAdapter {
     Color bg1;
     Color bg2;
     Color bgc;
+    Color bgn;
     Color fg1;
     Color fg2;
     Color fg3;
@@ -75,12 +76,12 @@ public class tracker0_1 extends ApplicationAdapter {
 //        parameter.genMipMaps = true;
         parameter.magFilter = TextureFilter.Linear;
         parameter.minFilter = TextureFilter.Linear;
-        parameter.characters = parameter.characters + "▄■";
+        parameter.characters = parameter.characters + "█▄■";
         font = generator.generateFont(parameter);
         generator.dispose();
         
         bg1 = new Color(0f, 0f, 0.1f, 1f); // blackened blue
-        bg2 = new Color(1f, 1f, 0.8f, 1f); // sunshine
+        bg2 = new Color(0.8f, 1f, 0.7f, 1f); // pale nature green
         fg1 = new Color(0.4f, 0.8f, 0.6f, 1f); // teal-green
         fg2 = new Color(0.3f, 0.6f, 0.9f, 1f); // cyan-blue
         fg3 = new Color(0.8f, 0.7f, 0.3f, 1f); // amber
@@ -88,6 +89,7 @@ public class tracker0_1 extends ApplicationAdapter {
         fl1 = new Color(1f, 1f, 1f, 1f); // white
         fl2 = new Color(0f, 0f, 0f, 1f); // black
         bgc = new Color(bg1);
+        bgn = new Color(bg2);
         flc = new Color(fl1);
         
         strobe = 0;
@@ -201,6 +203,7 @@ public class tracker0_1 extends ApplicationAdapter {
         PEdit.fg4 = SL.fg4 = fg4;
         PEdit.flc = SL.flc = flc;
         PEdit.bgc = SL.bgc = bgc;
+        PEdit.bgn = SL.bgn = bgn;
         
         PEdit.jtp = SL.jtp = jtp;
         PEdit.Track = 0;

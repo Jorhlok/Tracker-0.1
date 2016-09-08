@@ -18,6 +18,7 @@ public abstract class page {
     Color fg4;
     Color flc;
     Color bgc;
+    Color bgn;
     
     public page() {
         Event = new Array<Byte>();
