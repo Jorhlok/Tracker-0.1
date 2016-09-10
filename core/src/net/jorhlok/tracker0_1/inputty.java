@@ -29,7 +29,8 @@ public class inputty extends InputAdapter {
         LEFT(-13),
         RIGHT(-14),
         CTRL_S(-15),
-        DEL(-16);
+        DEL(-16),
+        ENTER(-17);
         
         
         byte val;
@@ -46,6 +47,9 @@ public class inputty extends InputAdapter {
     @Override
     public boolean keyDown(int k) {
         switch (k) {
+            case Input.Keys.ENTER:
+                Event.add(Events.ENTER.val);
+                break;
             case Input.Keys.BACKSPACE:
                 Event.add(Events.BACKSPACE.val);
                 break;
