@@ -1,5 +1,9 @@
 package net.jorhlok.tracker0_1.jorhtrackpack;
 
+import java.io.File;
+import java.io.FileOutputStream;
+import java.util.zip.ZipOutputStream;
+
 /**
  * Jorhlok Track Pack File
  * @author jorh
@@ -9,9 +13,9 @@ public class jtpfile {
     public String Author;
     public String Comment;
     public final String[] RecognizedVersions = {
-            //"0.2",
-            "0.1"
-        };
+        //"0.2",
+        "0.1"
+    };
     public final String[] RecognizedDescriptions = {
         //"",
         "This Jorh Track Pack file is zipped up instructions to make sweet music on a custom software synthesizer.\nMore info at jorhlok.net\n"
@@ -24,6 +28,7 @@ public class jtpfile {
     public jti[] InsType1;
     
     public String Path;
+    public boolean disabledebug = true;
     
     public jtpfile() {
         Name = Author = Comment = null;
@@ -86,7 +91,31 @@ public class jtpfile {
     }
     
     public boolean save() {
-        return false;
+        ZipOutputStream zout = null;
+        try {
+            File file = new File(Path);
+            zout = new ZipOutputStream(new FileOutputStream(file));
+            zout.setLevel(9);
+            //write reamde.txt
+            //write jts
+            //write ji0
+            //write ji1
+            //write hp4
+            //write hp8
+            //close zip file
+            
+            if (disabledebug) throw new Exception("not fully implemented");
+            zout.close();
+        } catch (Exception e) {
+            try {
+                if (zout != null ) zout.close();
+            } catch (Exception ee) {
+                //nothing
+            }
+            System.err.println("Exception trying to save jtp file. " + e.toString());
+            return false;
+        }
+        return true;
     }
     
     public boolean load() {

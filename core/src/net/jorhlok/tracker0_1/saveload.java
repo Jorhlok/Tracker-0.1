@@ -16,12 +16,11 @@ public class saveload extends page {
     int xCursor;
     int yCursor;
     boolean insert;
+    float FileFail = 0;
+    float FailureTime = 4;
     
-    TextBox PLoad = new TextBox("~/Documents/jtp/a.jtp");
-    TextBox PSave = new TextBox("~/Documents/jtp/a.jtp");
-    
-//    String PathLoad = "~/Documents/jtp/a.jtp";
-//    String PathSave = "~/Documents/jtp/a.jtp";
+    TextBox PathLoad = new TextBox("~/Documents/jtp/a.jtp");
+    TextBox PathSave = new TextBox("~/Documents/jtp/a.jtp");
     
     public saveload() {
         super();
@@ -37,9 +36,9 @@ public class saveload extends page {
             
             if (b >= 32 && b <= 126) {
                 if (yCursor == 0)
-                    PLoad.type((char)b, xCursor++, insert);
+                    PathLoad.type((char)b, xCursor++, insert);
                 else if (yCursor == 2)
-                    PSave.type((char)b, xCursor++, insert);
+                    PathSave.type((char)b, xCursor++, insert);
             }
             else switch (b) {
                 case -5: //insert
@@ -59,40 +58,50 @@ public class saveload extends page {
                     break;
                 case -1: //backspace
                     if (yCursor == 0)
-                        PLoad.backspace(xCursor--);
+                        PathLoad.backspace(xCursor--);
                     else if (yCursor == 2)
-                        PSave.backspace(xCursor--);
+                        PathSave.backspace(xCursor--);
                     break;
                 case -16: //delete
                     if (yCursor == 0)
-                        PLoad.delete(xCursor, insert);
+                        PathLoad.delete(xCursor, insert);
                     else if (yCursor == 2)
-                        PSave.delete(xCursor, insert);
+                        PathSave.delete(xCursor, insert);
                     break;
                 case -17: //enter
+                    boolean success = true;
                     if (yCursor == 1) {
                         //load
+                        jtp.Path = PathLoad.Text;
+                        success = jtp.load();
                     }
                     else if (yCursor == 3) {
                         //save
+                        jtp.Path = PathSave.Text;
+                        success = jtp.save();
                     }
+                    if (!success) FileFail = FailureTime;
                     break;
             }
             if (xCursor < 0)
                 xCursor = 0;
-            if (yCursor == 0 && xCursor > PLoad.length()) 
-                xCursor = PLoad.length();
-            else if (yCursor == 2 && xCursor > PSave.length())
-                xCursor = PSave.length();
+            if (yCursor == 0 && xCursor > PathLoad.length()) 
+                xCursor = PathLoad.length();
+            else if (yCursor == 2 && xCursor > PathSave.length())
+                xCursor = PathSave.length();
         }
     }
 
     @Override
     public void draw(Batch batch, BitmapFont font, float deltaTime) {
-        PLoad.draw(batch, font, deltaTime, fg3, flc, 8, 464-14*8, (yCursor == 0)?xCursor:-1, insert);
+        PathLoad.draw(batch, font, deltaTime, fg3, flc, 8, 464-14*8, (yCursor == 0)?xCursor:-1, insert);
         drawButton(batch, font, deltaTime, " Load ", fg4, (yCursor == 1)?flc:bgn, 8, 14*9);
-        PSave.draw(batch, font, deltaTime, fg1, flc, 8, 464-14*11, (yCursor == 2)?xCursor:-1, insert);
+        PathSave.draw(batch, font, deltaTime, fg1, flc, 8, 464-14*11, (yCursor == 2)?xCursor:-1, insert);
         drawButton(batch, font, deltaTime, " Save ", fg2, (yCursor == 3)?flc:bgn, 8, 14*12);
+        if (FileFail > 0) {
+            FileFail -= deltaTime;
+            drawButton(batch, font, deltaTime, " FILE OPERATION FAILURE ", new Color(1f,0f,0f,1f), flc, 8, 0);
+        }
     }
     
     private void drawButton(Batch batch, BitmapFont font, float deltaTime, String button, Color col, Color back, int xoff, int yoff) {
