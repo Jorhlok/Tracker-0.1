@@ -121,6 +121,7 @@ public class tracker0_1 extends ApplicationAdapter {
         track.Frame[0].InsPattern[6] = 6;
         track.Frame[0].InsPattern[7] = 7;
         track.Frame[0].PCMPattern = 0;
+        track.Sequence[0] = 0;
         
         
         for (int i=0;i<16;++i) jtp.PCM4[i] = new byte[2];

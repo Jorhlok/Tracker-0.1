@@ -2,6 +2,7 @@ package net.jorhlok.tracker0_1.jorhtrackpack;
 
 import java.io.File;
 import java.io.FileOutputStream;
+import java.util.zip.ZipEntry;
 import java.util.zip.ZipOutputStream;
 
 /**
@@ -82,11 +83,17 @@ public class jtpfile {
     }
     
     public String readmeString() {
-        String ret = "JTP version: \"" + RecognizedVersions[0]
-                + "\"\nName: \"" + Name 
-                + "\"\nAuthor: \"" + Author
-                + "\"\n" + Comment
-                + "\n\n\n" + RecognizedDescriptions[0] + "\n";
+        String ret = "JTP version: \"";
+        if (RecognizedVersions != null && RecognizedVersions[0] != null) ret += RecognizedVersions[0];
+        ret += "\"\nName: \"";
+        if (Name != null) ret += Name; 
+        ret += "\"\nAuthor: \"";
+        if (Author != null) ret += Author;
+        ret += "\"\n";
+        if (Comment != null) ret += Comment;
+        ret += "\n\n\n";
+        if (RecognizedDescriptions != null && RecognizedDescriptions[0] != null) ret += RecognizedDescriptions[0];
+        ret += "\n";
         return ret;
     }
     
@@ -96,15 +103,75 @@ public class jtpfile {
             File file = new File(Path);
             zout = new ZipOutputStream(new FileOutputStream(file));
             zout.setLevel(9);
+            ZipEntry entry;
             //write reamde.txt
+            entry = new ZipEntry("readme.txt");
+            zout.putNextEntry(entry);
+            zout.write(strToBytes(readmeString()));
+            zout.closeEntry();
             //write jts
+            if (Track != null)
+                for (int i=0; i<Track.length; ++i) {
+                    if (Track[i] != null) {
+                        String str = Integer.toHexString(i);
+                        if (str.length() < 2) str = "0" + str;
+                        entry = new ZipEntry(str + ".jts");
+                        zout.putNextEntry(entry);
+                        zout.write(strToBytes(Track[i].toString()));
+                        zout.closeEntry();
+                    }
+                }
             //write ji0
+            if (InsType0 != null) 
+                for (int i=0; i<InsType0.length; ++i) {
+                    if (InsType0[i] != null) {
+                        String str = Integer.toHexString(i);
+                        if (str.length() < 2) str = "0" + str;
+                        entry = new ZipEntry(str + ".ji0");
+                        zout.putNextEntry(entry);
+                        zout.write(strToBytes(InsType0[i].toString()));
+                        zout.closeEntry();
+                    }
+                }
             //write ji1
+            if (InsType1 != null) 
+                for (int i=0; i<InsType1.length; ++i) {
+                    if (InsType1[i] != null) {
+                        String str = Integer.toHexString(i);
+                        if (str.length() < 2) str = "0" + str;
+                        entry = new ZipEntry(str + ".ji1");
+                        zout.putNextEntry(entry);
+                        zout.write(strToBytes(InsType1[i].toString()));
+                        zout.closeEntry();
+                    }
+                }
             //write hp4
+            if (PCM4 != null) 
+                for (int i=0; i<PCM4.length; ++i) {
+                    if (PCM4[i] != null) {
+                        String str = Integer.toHexString(i);
+                        while (str.length() < 3) str = "0" + str;
+                        entry = new ZipEntry(str + ".hp4");
+                        zout.putNextEntry(entry);
+                        zout.write(strToBytes(PCM4ToString(i)));
+                        zout.closeEntry();
+                    }
+                }
             //write hp8
+            if (PCM8 != null) 
+                for (int i=0; i<PCM8.length; ++i) {
+                    if (PCM8[i] != null) {
+                        String str = Integer.toHexString(i);
+                        if (str.length() < 2) str = "0" + str;
+                        entry = new ZipEntry(str + ".hp8");
+                        zout.putNextEntry(entry);
+                        zout.write(strToBytes(PCM8ToString(i)));
+                        zout.closeEntry();
+                    }
+                }
             //close zip file
             
-            if (disabledebug) throw new Exception("not fully implemented");
+//            if (disabledebug) throw new Exception("not fully implemented");
             zout.close();
         } catch (Exception e) {
             try {
@@ -113,6 +180,7 @@ public class jtpfile {
                 //nothing
             }
             System.err.println("Exception trying to save jtp file. " + e.toString());
+            Thread.dumpStack();
             return false;
         }
         return true;
@@ -120,6 +188,15 @@ public class jtpfile {
     
     public boolean load() {
         return false;
+    }
+    
+    public byte[] strToBytes(String str) {
+        if (str == null) return null;
+        char[] carr = str.toCharArray();
+        byte[] barr = new byte[carr.length];
+        for (int i=0; i<carr.length; ++i)
+            barr[i] = (byte)carr[i];
+        return barr;
     }
 }
 

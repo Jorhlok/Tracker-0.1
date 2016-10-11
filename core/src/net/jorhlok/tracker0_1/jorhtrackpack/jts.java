@@ -74,8 +74,10 @@ public class jts {
         ret += "Track { ";
         if (Sequence != null && Sequence.length > 0) {
             ret += Integer.toHexString(Sequence[0]);
-            for (int i=1; i<Sequence.length; ++i)
+            for (int i=1; i<Sequence.length; ++i) {
+                if (Sequence[i] < 0 || Sequence[i] > 255) break;
                 ret += ", " + Integer.toHexString(Sequence[i]);
+            }
         }
         else ret += "00";
         ret += " }\n\n";
@@ -103,10 +105,11 @@ public class jts {
         ret += "\n";
         if (PCMPattern != null && PCMPattern.length > 0) {
             for (int i=0; i<PCMPattern.length; ++i) {
-                if (PCMPattern != null) {
+                if (PCMPattern[i] != null) {
                     if (i < 16) ret += "PCMPattern 0";
                     else ret += "PCMPattern ";
-                    ret += Integer.toHexString(i) + InsPattern[i].toString() + "\n";
+                    System.err.println(i);
+                    ret += Integer.toHexString(i) + PCMPattern[i].toString() + "\n";
                 }
             }
         }

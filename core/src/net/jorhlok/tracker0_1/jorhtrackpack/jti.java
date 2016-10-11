@@ -65,8 +65,14 @@ public class jti {
             for (int i=1; i<PCMLength.length; ++i)
                 ret += ", " + Integer.toHexString(PCMLength[i]);
             ret += "\n#Effects\n";
-            for (int i=0; i<Effect.length; ++i)
-                ret += Integer.toHexString(Effect[i]) + Integer.toHexString(FX1[i]) + Integer.toHexString(FX2[i]);
+            for (int i=0; i<Effect.length; ++i) {
+                ret += Effect[i];
+                if (FX1[i] >= 0 && FX1[i] < 16) ret += Integer.toHexString(FX1[i]);
+                else ret += '/';
+                if (FX2[i] >= 0 && FX2[i] < 16) ret += Integer.toHexString(FX2[i]);
+                else ret += '/';
+                ret += '\n';
+            }
         }
         else {
             ret += "#PCM map\n" + Integer.toHexString(PCM[0]) + "\n" + Integer.toHexString(PCMLength[0]);

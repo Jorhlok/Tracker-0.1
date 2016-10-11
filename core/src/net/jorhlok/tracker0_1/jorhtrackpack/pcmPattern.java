@@ -68,7 +68,6 @@ public class pcmPattern {
         }
         else ret += ",";
         
-        
         if (Waveform[index] >= 0) {
             str = Integer.toHexString(Waveform[index]);
             switch (2-str.length()) {
@@ -83,7 +82,6 @@ public class pcmPattern {
             }
         }
         else ret += "..";
-        
         
         return ret;
     }
@@ -132,8 +130,7 @@ public class pcmPattern {
 
     @Override
     public String toString() {
-        String ret;
-        ret = "{\n";
+        String ret = "{\n";
         for (int i=0; i<Length; ++i) {
             ret += "\t" + noteToString(i) + "\n";
         }
