@@ -62,14 +62,14 @@ public class jts {
         ret += Float.toString(SampleRate); //only non-int and only decimal
         ret += "\n\tSamplesPerUpdate = ";
         ret += Integer.toHexString(SamplesPerUpdate).toUpperCase();
-        ret += "\n\tNoteUpdatePattern = { ";
+        ret += "\n\tNoteUpdatePattern = ";
         if (NoteUpdatePattern != null && NoteUpdatePattern.length > 0) {
             ret += Integer.toHexString(NoteUpdatePattern[0]);
             for (int i=1; i<NoteUpdatePattern.length; ++i)
                 ret += ", " + Integer.toHexString(NoteUpdatePattern[i]);
         }
         else ret += "1";
-        ret += " }\n}\n\n";
+        ret += "\n}\n\n";
         //sequence
         ret += "Track { ";
         if (Sequence != null && Sequence.length > 0) {
@@ -115,6 +115,10 @@ public class jts {
         }
         ret += "\n";
         return ret;
+    }
+    
+    public boolean fromString(String str) {
+        return false;
     }
 
     public void newInsPattern(int i) {

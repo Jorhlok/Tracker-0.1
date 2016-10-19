@@ -44,27 +44,28 @@ public class jti {
         str = EnvStereo.toString();
         j = str.indexOf('\n');
         k = str.lastIndexOf('\n');
-        ret += "#Stereo Envelope\n" + str.substring(j, k+1);
+        ret += "StereoEnvelope {\n" + str.substring(j, k+1) + "}\n";
         str = EnvVolume.toString();
         j = str.indexOf('\n');
         k = str.lastIndexOf('\n');
-        ret += "#Volume Envelope\n" + str.substring(j, k+1);
+        ret += "\nVolumeEnvelope {\n" + str.substring(j, k+1) + "}\n";
         if (!HalfSupport) {
             str = EnvWidth.toString();
             j = str.indexOf('\n');
             k = str.lastIndexOf('\n');
-            ret += "#Width Envelope\n" + str.substring(j, k+1);
+            ret += "\nWidthEnvelope {\n" + str.substring(j, k+1) + "}\n";
             str = EnvNoise.toString();
             j = str.indexOf('\n');
             k = str.lastIndexOf('\n');
-            ret += "#Noise Envelope\n" + str.substring(j, k+1);
-            ret += "#PCM map\n" + Integer.toHexString(PCM[0]);
+            ret += "\nNoiseEnvelope {\n" + str.substring(j, k+1) + "}\n";
+            ret += "\nPCMmap {\n" + Integer.toHexString(PCM[0]);
             for (int i=1; i<PCM.length; ++i)
                 ret += ", " + Integer.toHexString(PCM[i]);
             ret += "\n" + Integer.toHexString(PCMLength[0]);
             for (int i=1; i<PCMLength.length; ++i)
                 ret += ", " + Integer.toHexString(PCMLength[i]);
-            ret += "\n#Effects\n";
+            ret += "\n}\n";
+            ret += "\nEffects {\n";
             for (int i=0; i<Effect.length; ++i) {
                 ret += Effect[i];
                 if (FX1[i] >= 0 && FX1[i] < 16) ret += Integer.toHexString(FX1[i]);
@@ -73,12 +74,18 @@ public class jti {
                 else ret += '/';
                 ret += '\n';
             }
+            ret += "}\n";
         }
         else {
-            ret += "#PCM map\n" + Integer.toHexString(PCM[0]) + "\n" + Integer.toHexString(PCMLength[0]);
+            ret += "PCMmap {\n" + Integer.toHexString(PCM[0]) + "\n" + Integer.toHexString(PCMLength[0]);
             for (int i=1; i<4; ++i)
                 ret += ", " + Integer.toHexString(PCMLength[i]);
+            ret += "\n}\n";
         }
         return ret;
+    }
+    
+    public boolean fromString(String str) {
+        return false;
     }
 }

@@ -22,4 +22,8 @@ public class frame {
         ret += ", " + Integer.toHexString(PCMPattern) + "}";
         return ret;
     }
+    
+    public boolean fromString(String str) {
+        return false;
+    }
 }

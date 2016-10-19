@@ -83,18 +83,31 @@ public class jtpfile {
     }
     
     public String readmeString() {
-        String ret = "JTP version: \"";
+        String ret = "#JTP version: \"";
         if (RecognizedVersions != null && RecognizedVersions[0] != null) ret += RecognizedVersions[0];
-        ret += "\"\nName: \"";
+        ret += "\"\n#Name: \"";
         if (Name != null) ret += Name; 
-        ret += "\"\nAuthor: \"";
-        if (Author != null) ret += Author;
-        ret += "\"\n";
-        if (Comment != null) ret += Comment;
-        ret += "\n\n\n";
-        if (RecognizedDescriptions != null && RecognizedDescriptions[0] != null) ret += RecognizedDescriptions[0];
+        ret += "\"\n#Author: \"";
+        if (Author != null) ret += Author + "\"\n";
+        else ret += "\"\n";
+        if (Comment != null) {
+            ret += "#";
+            ret += Comment.replaceAll("\n", "\n#") + "\n\n";
+        }
+        if (RecognizedDescriptions != null && RecognizedDescriptions[0] != null) ret += "\n" + RecognizedDescriptions[0];
         ret += "\n";
         return ret;
+    }
+    
+    public boolean PCM4FromString(String str) {
+        return false;
+    }
+    
+    public boolean PCM8FromString(String str) {
+        return false;
+    }
+    public boolean readmeFromString(String str) {
+        return false;
     }
     
     public boolean save() {

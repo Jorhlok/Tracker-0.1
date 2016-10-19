@@ -215,4 +215,8 @@ public class insPattern {
         ret += "}\n";
         return ret;
     }
+    
+    public boolean fromString(String str) {
+        return false;
+    }
 }
