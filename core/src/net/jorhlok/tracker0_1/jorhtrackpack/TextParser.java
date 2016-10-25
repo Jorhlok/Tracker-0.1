@@ -41,8 +41,9 @@ public class TextParser {
         ArrayList<String> tmp;
         while (i < str.length()) {
             j = str.indexOf('\n', i);
+            if (j < 0 || j > str.length()) j = str.length();
             s = str.substring(i, j).trim();
-            if (s.charAt(0) == '#') {
+            if (s.length() > 0 && s.charAt(0) == '#') {
                 Elements.add(new ArrayList<String>());
                 tmp = Elements.get(Elements.size()-1);
                 k = s.indexOf('=');
@@ -63,7 +64,7 @@ public class TextParser {
                     else tmp.add(""); //no value present?
                 }
             }
-            else if ( (k = s.indexOf('{')) >= 0 ) {
+            else if ( s.length() > 0 && (k = s.indexOf('{')) >= 0 ) {
                 Elements.add(new ArrayList<String>());
                 tmp = Elements.get(Elements.size()-1);
                 tmp.add("{}");
@@ -74,26 +75,23 @@ public class TextParser {
                     //there IS a } on this line and maybe stuff in between and/or after
                     if (l > k+1) tmp.add(s.substring(k+1,l).trim()); //stuff in between
                     else tmp.add(""); //nothing in between
-                    if (s.length() > l+1) { //stuff after } is its own worthless text element
-                        Elements.add(new ArrayList<String>());
-                        tmp = Elements.get(Elements.size()-1);
-                        tmp.add(s.substring(l+1).trim());
+                    if (s.length() > l+1) { //stuff after } is processed as its own line
+                        j = str.indexOf('}', i) + 1;
                     }
                 }
                 else { //iterate through following lines to find crap that matters
                     boolean closed = false;
                     while(!closed) {
-                        i = j;
+                        i = j + 1;
                         j = str.indexOf('\n', i);
                         s = str.substring(i, j).trim();
                         if ( (k = s.indexOf('}')) >= 0 ) {
                             closed = true;
                             if (k > 0) tmp.add(s.substring(0, k)); //line before }
                             else tmp.add("");
-                            if (s.length() > k+1) { //stuff after } is its own worthless text element
-                                Elements.add(new ArrayList<String>());
-                                tmp = Elements.get(Elements.size()-1);
-                                tmp.add(s.substring(k+1).trim());
+                            if (s.length() > k+1) { //stuff after } is processed as its own seperate line
+                                j = str.indexOf('}', i)+1;
+                                closed = true;
                             }
                         }
                         else tmp.add(s);
@@ -105,7 +103,7 @@ public class TextParser {
                 tmp = Elements.get(Elements.size()-1);
                 tmp.add(s);
             }
-            i = j;
+            i = j + 1;
         }
     }
 }

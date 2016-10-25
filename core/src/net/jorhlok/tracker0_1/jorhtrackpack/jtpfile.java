@@ -1,8 +1,10 @@
 package net.jorhlok.tracker0_1.jorhtrackpack;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.util.zip.ZipEntry;
+import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
 
 /**
@@ -200,7 +202,37 @@ public class jtpfile {
     }
     
     public boolean load() {
-        return false;
+        TextParser tp = new TextParser();
+        ZipInputStream zin = null;
+        String str;
+        int i;
+        byte[] b = new byte[256];
+        try {
+            File file = new File(Path);
+            zin = new ZipInputStream(new FileInputStream(file));
+            ZipEntry ze;
+            while ((ze = zin.getNextEntry()) != null) {
+                str = ze.getName();
+                System.out.println(str);
+                str = "";
+                while ((i = zin.read(b)) > 0) {
+                    for (int j=0; j<i; ++j)
+                        str += (char)b[j];
+                }
+                tp.Parse(str);
+                System.out.println(tp.Elements.toString());
+            }
+        } catch (Exception e) {
+            try {
+                if (zin != null ) zin.close();
+            } catch (Exception ee) {
+                //nothing
+            }
+            System.err.println("Exception trying to load jtp file. " + e.toString());
+            Thread.dumpStack();
+            return false;
+        }
+        return true;
     }
     
     public byte[] strToBytes(String str) {
