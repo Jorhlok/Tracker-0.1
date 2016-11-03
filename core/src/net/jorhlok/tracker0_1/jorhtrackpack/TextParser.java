@@ -106,4 +106,32 @@ public class TextParser {
             i = j + 1;
         }
     }
+    
+    public String[] ParseVar(String str, String operands) {
+        if (str == null || operands == null) return null;
+        String[] ret = new String[3];
+        int j = -1;
+        for(int i=0; i<operands.length(); ++i) {
+            j = str.indexOf(operands.charAt(i));
+            if ( j >= 0 && j < (str.length()-1) ) break;
+        }
+        if (j < 0) return null;
+        ret[0] = str.substring(0, j);
+        ret[1] = str.substring(j+1, j+1);
+        ret[2] = str.substring(j+2, str.length());
+        return ret;
+    }
+    
+    public ArrayList<String> ParseArray(String str, char delimiter) {
+        if (str == null || str.equals("")) return null;
+        ArrayList<String> ret = new ArrayList<String>();
+        int i=0, j=0;
+        while (j >= 0 && j < str.length()) {
+            j = str.indexOf(delimiter, i);
+            if (j < 0) ret.add(str.substring(i));
+            else ret.add(str.substring(i, j));
+            i = j+1;
+        }
+        return ret;
+    }
 }

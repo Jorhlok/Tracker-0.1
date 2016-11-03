@@ -1,5 +1,7 @@
 package net.jorhlok.tracker0_1.jorhtrackpack;
 
+import java.util.ArrayList;
+
 /**
  * Jorhlok Tracker Instrument
  * Works with ChannelType0 and ChannelType1
@@ -85,7 +87,7 @@ public class jti {
         return ret;
     }
     
-    public boolean fromString(String str) {
+    public boolean fromFile(boolean hsupport, ArrayList< ArrayList<String> > str) {
         return false;
     }
 }

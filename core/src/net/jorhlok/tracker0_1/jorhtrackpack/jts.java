@@ -1,5 +1,7 @@
 package net.jorhlok.tracker0_1.jorhtrackpack;
 
+import java.util.ArrayList;
+
 /**
  * Jorhlok Track Sequence
  * @author jorh
@@ -117,7 +119,7 @@ public class jts {
         return ret;
     }
     
-    public boolean fromString(String str) {
+    public boolean fromFile(ArrayList< ArrayList<String> > str) {
         return false;
     }
 

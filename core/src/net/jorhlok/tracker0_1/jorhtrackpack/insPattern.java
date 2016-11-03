@@ -1,5 +1,7 @@
 package net.jorhlok.tracker0_1.jorhtrackpack;
 
+import java.util.ArrayList;
+
 /**
  * Pattern of standard instruments
  * @author jorh
@@ -216,7 +218,7 @@ public class insPattern {
         return ret;
     }
     
-    public boolean fromString(String str) {
+    public boolean fromFile(ArrayList<String> str) {
         return false;
     }
 }

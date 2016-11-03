@@ -18,6 +18,8 @@ public class saveload extends page {
     boolean insert;
     float FileFail = 0;
     float FailureTime = 4;
+    float FileSuccess = 0;
+    float SuccessTime = 4;
     
     TextBox PathLoad = new TextBox("~/Documents/jtp/a.jtp");
     TextBox PathSave = new TextBox("~/Documents/jtp/a.jtp");
@@ -80,7 +82,14 @@ public class saveload extends page {
                         jtp.Path = PathSave.Text;
                         success = jtp.save();
                     }
-                    if (!success) FileFail = FailureTime;
+                    if (!success) {
+                        FileFail = FailureTime;
+                        FileSuccess = 0;
+                    }
+                    else {
+                        FileSuccess = SuccessTime;
+                        FileFail = 0;
+                    }
                     break;
             }
             if (xCursor < 0)
@@ -101,6 +110,10 @@ public class saveload extends page {
         if (FileFail > 0) {
             FileFail -= deltaTime;
             drawButton(batch, font, deltaTime, " FILE OPERATION FAILURE ", new Color(1f,0f,0f,1f), flc, 8, 0);
+        }
+        else if (FileSuccess > 0) {
+            FileSuccess -= deltaTime;
+            drawButton(batch, font, deltaTime, " FILE OPERATION SUCCESS ", new Color(0f,0f,0f,1f), bgn, 8, 0);
         }
     }
     

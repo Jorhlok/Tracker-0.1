@@ -3,6 +3,8 @@ package net.jorhlok.tracker0_1.jorhtrackpack;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.util.ArrayList;
+import java.util.ListIterator;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 import java.util.zip.ZipOutputStream;
@@ -101,14 +103,29 @@ public class jtpfile {
         return ret;
     }
     
-    public boolean PCM4FromString(String str) {
+    public boolean PCM4FromFile(int index, ArrayList< ArrayList<String> > str) {
+        if (index < 0 || index > 4095 || str == null) return false;
+        ArrayList<Byte> b = new ArrayList<Byte>();
+        for (ArrayList<String> ss : str) {
+            if (ss != null)for (String s : ss) {
+                if (s != null)for (int i=0; i<s.length(); ++i) {
+                    int n = Character.digit(s.charAt(i), 16);
+                    if (n >= 0) b.add((byte)n);
+                }
+            }
+        }
+        if(b.isEmpty()) return false;
+        PCM4[index] = new byte[b.size()];
+        for (ListIterator<Byte> iter=b.listIterator();iter.hasNext();)
+            PCM4[index][iter.nextIndex()] = iter.next();
+        return true;
+    }
+    
+    public boolean PCM8FromFile(int index, ArrayList< ArrayList<String> > str) {
         return false;
     }
     
-    public boolean PCM8FromString(String str) {
-        return false;
-    }
-    public boolean readmeFromString(String str) {
+    public boolean readmeFromFile(ArrayList< ArrayList<String> > str) {
         return false;
     }
     
@@ -205,6 +222,7 @@ public class jtpfile {
         TextParser tp = new TextParser();
         ZipInputStream zin = null;
         String str;
+        String name;
         int i;
         byte[] b = new byte[256];
         try {
@@ -212,15 +230,29 @@ public class jtpfile {
             zin = new ZipInputStream(new FileInputStream(file));
             ZipEntry ze;
             while ((ze = zin.getNextEntry()) != null) {
-                str = ze.getName();
-                System.out.println(str);
+                name = ze.getName();
+                System.out.println(name);
                 str = "";
                 while ((i = zin.read(b)) > 0) {
                     for (int j=0; j<i; ++j)
                         str += (char)b[j];
                 }
                 tp.Parse(str);
-                System.out.println(tp.Elements.toString());
+                //System.out.println(tp.Elements.toString());
+                for (ArrayList<String> e : tp.Elements)
+                    System.out.println(e.toString());
+                if (name.length() > 4) {
+                    int num;
+                    try {
+                        num = Integer.parseInt(name.substring(0, name.length()-4),16);
+                    } catch (Exception e) {
+                        num = -1;
+                    }
+                    if (num >= 0 && num < 4096 && name.substring(name.length()-3).equalsIgnoreCase("hp4") ) {
+                        PCM4FromFile(num, tp.Elements);
+                        InsType1[0].PCMLength[15] = 16; // debug
+                    }
+                }
             }
         } catch (Exception e) {
             try {
@@ -237,10 +269,9 @@ public class jtpfile {
     
     public byte[] strToBytes(String str) {
         if (str == null) return null;
-        char[] carr = str.toCharArray();
-        byte[] barr = new byte[carr.length];
-        for (int i=0; i<carr.length; ++i)
-            barr[i] = (byte)carr[i];
+        byte[] barr = new byte[str.length()];
+        for (int i=0; i<str.length(); ++i)
+            barr[i] = (byte)str.charAt(i);
         return barr;
     }
 }

@@ -1,5 +1,7 @@
 package net.jorhlok.tracker0_1.jorhtrackpack;
 
+import java.util.ArrayList;
+
 /**
  * Pattern of PCM8 commands
  * @author jorh
@@ -138,7 +140,7 @@ public class pcmPattern {
         return ret;
     }
     
-    public boolean fromString(String str) {
+    public boolean fromFile(ArrayList<String> str) {
         return false;
     }
 }

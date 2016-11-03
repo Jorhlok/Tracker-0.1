@@ -1,5 +1,7 @@
 package net.jorhlok.tracker0_1.jorhtrackpack;
 
+import java.util.ArrayList;
+
 /**
  * frame of patterns
  * @author jorh
@@ -23,7 +25,7 @@ public class frame {
         return ret;
     }
     
-    public boolean fromString(String str) {
+    public boolean fromFile(ArrayList<String> str) {
         return false;
     }
 }
