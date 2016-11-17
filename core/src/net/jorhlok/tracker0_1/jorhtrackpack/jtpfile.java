@@ -110,7 +110,7 @@ public class jtpfile {
             if (ss != null)for (String s : ss) {
                 if (s != null)for (int i=0; i<s.length(); ++i) {
                     int n = Character.digit(s.charAt(i), 16);
-                    if (n >= 0) b.add((byte)n);
+                    if (n >= 0) b.add((byte)(n-8));
                 }
             }
         }
@@ -248,10 +248,33 @@ public class jtpfile {
                     } catch (Exception e) {
                         num = -1;
                     }
-                    if (num >= 0 && num < 4096 && name.substring(name.length()-3).equalsIgnoreCase("hp4") ) {
-                        PCM4FromFile(num, tp.Elements);
-                        InsType1[0].PCMLength[15] = 16; // debug
+                    boolean result = false;
+                    if (name.equalsIgnoreCase("readme.txt") ) {
+                        result = readmeFromFile(tp.Elements);
                     }
+                    else if (num >= 0 && num < 4096 && name.substring(name.length()-3).equalsIgnoreCase("hp4") ) {
+                        if (PCM4[num] == null) PCM4[num] = new byte[64];
+                        result = PCM4FromFile(num, tp.Elements);
+//                        InsType1[0].PCMLength[15] = 16; // debug
+                    }
+                    else if (num >= 0 && num < 256 && name.substring(name.length()-3).equalsIgnoreCase("hp8") ) {
+                        if (PCM4[num] == null) PCM4[num] = new byte[256];
+                        result = PCM8FromFile(num, tp.Elements);
+                    }
+                    else if (num >= 0 && num < 256 && name.substring(name.length()-3).equalsIgnoreCase("ji0") ) {
+                        if (InsType0[num] == null) newInsType0(num);
+                        result = InsType0[num].fromFile(true, tp.Elements);
+                    }
+                    else if (num >= 0 && num < 256 && name.substring(name.length()-3).equalsIgnoreCase("ji1") ) {
+                        if (InsType1[num] == null) newInsType1(num);
+                        result = InsType1[num].fromFile(false, tp.Elements);
+                    }
+                    else if (num >= 0 && num < 256 && name.substring(name.length()-3).equalsIgnoreCase("jts") ) {
+                        newTrack(num);
+                        result = Track[num].fromFile(tp.Elements);
+                    }
+                    
+                    if (!result)System.err.println("Error reading " + name);
                 }
             }
         } catch (Exception e) {
