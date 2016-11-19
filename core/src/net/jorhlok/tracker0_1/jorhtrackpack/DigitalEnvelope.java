@@ -103,48 +103,48 @@ public class DigitalEnvelope {
         return TimeScaler;
     }
 
-    public void setTimeScaler(byte TimeScaler) {
-        this.TimeScaler = TimeScaler;
+    public void setTimeScaler(int TimeScaler) {
+        this.TimeScaler = (byte)TimeScaler;
     }
 
     public short getLoopPoint() {
         return LoopPoint;
     }
 
-    public void setLoopPoint(short LoopPoint) {
-        this.LoopPoint = LoopPoint;
+    public void setLoopPoint(int LoopPoint) {
+        this.LoopPoint = (short)LoopPoint;
     }
 
     public short getSustainPoint() {
         return SustainPoint;
     }
 
-    public void setSustainPoint(short SustainPoint) {
-        this.SustainPoint = SustainPoint;
+    public void setSustainPoint(int SustainPoint) {
+        this.SustainPoint = (short)SustainPoint;
     }
 
     public short getEndPoint() {
         return EndPoint;
     }
 
-    public void setEndPoint(short EndPoint) {
-        this.EndPoint = EndPoint;
+    public void setEndPoint(int EndPoint) {
+        this.EndPoint = (short)EndPoint;
     }
 
     public short getCurrentPoint() {
         return CurrentPoint;
     }
 
-    public void setCurrentPoint(short CurrentPoint) {
-        this.CurrentPoint = CurrentPoint;
+    public void setCurrentPoint(int CurrentPoint) {
+        this.CurrentPoint = (short)CurrentPoint;
     }
 
     public byte getCurrentCounter() {
         return CurrentCounter;
     }
 
-    public void setCurrentCounter(byte CurrentCounter) {
-        this.CurrentCounter = CurrentCounter;
+    public void setCurrentCounter(int CurrentCounter) {
+        this.CurrentCounter = (byte)CurrentCounter;
     }
     
     @Override

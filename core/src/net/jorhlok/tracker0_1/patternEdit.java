@@ -243,7 +243,10 @@ public class patternEdit extends page {
         for (int i=0; i<8; i++) {
             //check pattern
             patt = null;
-            if (jtp.Track[Track] != null
+            if (jtp != null
+                && jtp.Track != null
+                && jtp.Track[Track] != null
+                && jtp.Track[Track].Frame != null
                 && jtp.Track[Track].Frame[Frame] != null
                 && jtp.Track[Track].Frame[Frame].InsPattern[i] >= 0 ) {
                     patt = jtp.Track[Track].InsPattern[ jtp.Track[Track].Frame[Frame].InsPattern[i] ];
@@ -260,7 +263,10 @@ public class patternEdit extends page {
         }
         
         pcmPattern pcmpatt = null;
-        if (jtp.Track[Track] != null
+        if (jtp != null
+            && jtp.Track != null
+            && jtp.Track[Track] != null
+            && jtp.Track[Track].Frame != null
             && jtp.Track[Track].Frame[Frame] != null
             && jtp.Track[Track].Frame[Frame].PCMPattern >= 0 
             && (pcmpatt = jtp.Track[Track].PCMPattern[ jtp.Track[Track].Frame[Frame].PCMPattern ]) != null ) {

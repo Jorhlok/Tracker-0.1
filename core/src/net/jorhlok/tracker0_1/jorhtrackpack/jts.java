@@ -119,7 +119,7 @@ public class jts {
         return ret;
     }
     
-    public boolean fromFile(ArrayList< ArrayList<String> > str) {
+    public boolean fromFile(TextParser tp) {
         return false;
     }
 

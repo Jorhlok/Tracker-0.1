@@ -103,10 +103,10 @@ public class jtpfile {
         return ret;
     }
     
-    public boolean PCM4FromFile(int index, ArrayList< ArrayList<String> > str) {
-        if (index < 0 || index > 4095 || str == null) return false;
-        ArrayList<Byte> b = new ArrayList<Byte>();
-        for (ArrayList<String> ss : str) {
+    public boolean PCM4FromFile(int index, TextParser tp) {
+        if (index < 0 || index > 4095 || tp == null || tp.Elements == null) return false;
+        ArrayList<Byte> b = new ArrayList<>();
+        for (ArrayList<String> ss : tp.Elements) {
             if (ss != null)for (String s : ss) {
                 if (s != null)for (int i=0; i<s.length(); ++i) {
                     int n = Character.digit(s.charAt(i), 16);
@@ -121,11 +121,11 @@ public class jtpfile {
         return true;
     }
     
-    public boolean PCM8FromFile(int index, ArrayList< ArrayList<String> > str) {
+    public boolean PCM8FromFile(int index, TextParser tp) {
         return false;
     }
     
-    public boolean readmeFromFile(ArrayList< ArrayList<String> > str) {
+    public boolean readmeFromFile(TextParser tp) {
         return false;
     }
     
@@ -202,8 +202,6 @@ public class jtpfile {
                     }
                 }
             //close zip file
-            
-//            if (disabledebug) throw new Exception("not fully implemented");
             zout.close();
         } catch (Exception e) {
             try {
@@ -239,8 +237,8 @@ public class jtpfile {
                 }
                 tp.Parse(str);
                 //System.out.println(tp.Elements.toString());
-                for (ArrayList<String> e : tp.Elements)
-                    System.out.println(e.toString());
+//                for (ArrayList<String> e : tp.Elements)
+//                    System.out.println(e.toString());
                 if (name.length() > 4) {
                     int num;
                     try {
@@ -250,33 +248,33 @@ public class jtpfile {
                     }
                     boolean result = false;
                     if (name.equalsIgnoreCase("readme.txt") ) {
-                        result = readmeFromFile(tp.Elements);
+                        result = readmeFromFile(tp);
                     }
                     else if (num >= 0 && num < 4096 && name.substring(name.length()-3).equalsIgnoreCase("hp4") ) {
                         if (PCM4[num] == null) PCM4[num] = new byte[64];
-                        result = PCM4FromFile(num, tp.Elements);
-//                        InsType1[0].PCMLength[15] = 16; // debug
+                        result = PCM4FromFile(num, tp);
                     }
                     else if (num >= 0 && num < 256 && name.substring(name.length()-3).equalsIgnoreCase("hp8") ) {
                         if (PCM4[num] == null) PCM4[num] = new byte[256];
-                        result = PCM8FromFile(num, tp.Elements);
+                        result = PCM8FromFile(num, tp);
                     }
                     else if (num >= 0 && num < 256 && name.substring(name.length()-3).equalsIgnoreCase("ji0") ) {
                         if (InsType0[num] == null) newInsType0(num);
-                        result = InsType0[num].fromFile(true, tp.Elements);
+                        result = InsType0[num].fromFile(true, tp);
                     }
                     else if (num >= 0 && num < 256 && name.substring(name.length()-3).equalsIgnoreCase("ji1") ) {
                         if (InsType1[num] == null) newInsType1(num);
-                        result = InsType1[num].fromFile(false, tp.Elements);
+                        result = InsType1[num].fromFile(false, tp);
                     }
                     else if (num >= 0 && num < 256 && name.substring(name.length()-3).equalsIgnoreCase("jts") ) {
-                        newTrack(num);
-                        result = Track[num].fromFile(tp.Elements);
+                        //newTrack(num);
+                        result = Track[num].fromFile(tp);
                     }
                     
-                    if (!result)System.err.println("Error reading " + name);
+                    if (!result) System.err.println("Error reading " + name);
                 }
             }
+            zin.close();
         } catch (Exception e) {
             try {
                 if (zin != null ) zin.close();
