@@ -29,10 +29,10 @@ public class AsyncPlay implements AsyncTask {
         int[] stereo = new int[pr.Channels1.length];
         int[] noise = new int[pr.Channels1.length];
         for (int i=0; i<pr.Channels1.length; ++i) {
-            chip.setStepper(i, pr.Channels1[i].getStepper());
+            chip.setStepper1(i, pr.Channels1[i].getStepper());
             if (pr.Channels1[i].Retrig) {
                 pr.Channels1[i].Retrig = false;
-                chip.setCounter(i, 0);
+                chip.setCounter1(i, 0);
             }
             chip.setSamples(i, pr.data.PCM4[pr.Channels1[i].getSamples()]);
             chip.setnSamples(i, pr.Channels1[i].getNSamples());

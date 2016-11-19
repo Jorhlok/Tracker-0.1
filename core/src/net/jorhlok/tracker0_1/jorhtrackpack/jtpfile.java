@@ -33,7 +33,6 @@ public class jtpfile {
     public jti[] InsType1;
     
     public String Path;
-    public boolean disabledebug = true;
     
     public jtpfile() {
         Name = Author = Comment = null;
@@ -57,6 +56,7 @@ public class jtpfile {
             InsType0[i].HalfSupport = true;
         }
     }
+    
     public void newInsType1(int i) {
         if (i >= 0 && i < 256) {
             InsType1[i] = new jti();
@@ -116,13 +116,29 @@ public class jtpfile {
         }
         if(b.isEmpty()) return false;
         PCM4[index] = new byte[b.size()];
-        for (ListIterator<Byte> iter=b.listIterator();iter.hasNext();)
+        for (ListIterator<Byte> iter=b.listIterator(); iter.hasNext();)
             PCM4[index][iter.nextIndex()] = iter.next();
         return true;
     }
     
     public boolean PCM8FromFile(int index, TextParser tp) {
-        return false;
+        if (index < 0 || index > 255 || tp == null || tp.Elements == null) return false;
+        ArrayList<Byte> b = new ArrayList<>();
+        for (ArrayList<String> ss : tp.Elements) {
+            if (ss != null)for (String s : ss) {
+                if (s != null)for (int i=0; i<s.length(); ++i) {
+                    int n = Character.digit(s.charAt(i), 16);
+                    if (n >= 0) b.add((byte)(n));
+                }
+            }
+        }
+        if(b.isEmpty()) return false;
+        PCM8[index] = new byte[b.size()/2];
+        for (ListIterator<Byte> iter=b.listIterator(); iter.hasNext();) {
+            byte high = iter.next(); //high byte
+            if (iter.hasNext()) PCM8[index][iter.nextIndex()] = (byte)(iter.next() + 16*high - 128);
+        }
+        return true;
     }
     
     public boolean readmeFromFile(TextParser tp) {

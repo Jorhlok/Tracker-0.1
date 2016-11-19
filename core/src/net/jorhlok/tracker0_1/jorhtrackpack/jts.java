@@ -1,6 +1,7 @@
 package net.jorhlok.tracker0_1.jorhtrackpack;
 
 import java.util.ArrayList;
+import java.util.ListIterator;
 
 /**
  * Jorhlok Track Sequence
@@ -12,6 +13,7 @@ public class jts {
     public String Comment;
     
     public short Length; // 0-FF
+    public short Loop; // 0-FF
     public short[] Sequence; // 0-FF (arrangement of frames in the track)
     public frame[] Frame;
     public insPattern[] InsPattern;
@@ -58,6 +60,8 @@ public class jts {
         ret += "\"";
         ret += "\n\tLength = ";
         ret += Integer.toHexString(Length).toUpperCase();
+        ret += "\n\tLoop = ";
+        ret += Integer.toHexString(Loop).toUpperCase();
         ret += "\n\tPatternLength = ";
         ret += Integer.toHexString(PatternLength).toUpperCase();
         ret += "\n\tSampleRate = ";
@@ -120,7 +124,158 @@ public class jts {
     }
     
     public boolean fromFile(TextParser tp) {
-        return false;
+        if (tp == null || tp.Elements == null) return false;
+        int sectionpast = 0; 
+        for (ArrayList<String> ss : tp.Elements) {
+            if (ss.size() > 2) {
+                ListIterator<String> iter = ss.listIterator();
+                String prefix = iter.next();
+                if (prefix.equals("{}")) {
+                    sectionpast = 3;
+                    String name = iter.next();
+                    if (name.equalsIgnoreCase("settings")) {
+                        while (iter.hasNext()) {
+                            String[] variable = TextParser.ParseVar(iter.next(), "=:");
+                            if (variable != null && variable.length > 2) {
+                                switch (variable[0].toLowerCase()) {
+                                    case "targetchip":
+                                        if (variable[2].startsWith("\"") && variable[2].endsWith("\"")) //remove excess quotes
+                                            variable[2] = variable[2].substring(1, variable[2].length()-1);
+                                        TargetChip = variable[2];
+                                        break;
+                                    case "length":
+                                        try {
+                                            Length = (short)Integer.parseInt(variable[2], 16);
+                                        } catch (Exception e) {
+                                            System.err.println("Error reading " + variable[0] + " because:\n" + e.toString());
+                                        }
+                                        break;
+                                    case "patternlength":
+                                        try {
+                                            PatternLength = (short)Integer.parseInt(variable[2], 16);
+                                        } catch (Exception e) {
+                                            System.err.println("Error reading " + variable[0] + " because:\n" + e.toString());
+                                        }
+                                        break;
+                                    case "samplerate":
+                                        try {
+                                            SampleRate = Float.parseFloat(variable[2]);
+                                        } catch (Exception e) {
+                                            System.err.println("Error reading " + variable[0] + " because:\n" + e.toString());
+                                        }
+                                        break;
+                                    case "samplesperupdate":
+                                        try {
+                                            SamplesPerUpdate = Integer.parseInt(variable[2], 16);
+                                        } catch (Exception e) {
+                                            System.err.println("Error reading " + variable[0] + " because:\n" + e.toString());
+                                        }
+                                        break;
+                                    case "noteupdatepattern":
+                                        try {
+                                            ArrayList<String> arr = TextParser.ParseArray(variable[2], ',');
+                                            NoteUpdatePattern = new byte[arr.size()];
+                                            for (ListIterator<String> iter2=arr.listIterator(); iter.hasNext();)
+                                                NoteUpdatePattern[iter2.nextIndex()] = (byte)Integer.parseInt(iter2.next(), 16);
+                                        } catch (Exception e) {
+                                            System.err.println("Error reading " + variable[0] + " because:\n" + e.toString());
+                                        }
+                                        break;
+                                }
+                            }
+                        }
+
+                    }
+                    else if (name.equalsIgnoreCase("track")){
+                        String tmp = "";
+                        while (iter.hasNext())
+                            tmp += iter.next();
+                        try {
+                            ArrayList<String> arr = TextParser.ParseArray(tmp, ',');
+                            for (ListIterator<String> iter2=arr.listIterator(); iter2.hasNext();)
+                                Sequence[iter2.nextIndex()] = (short)Integer.parseInt(iter2.next(), 16);
+                        } catch (Exception e) {
+                            System.err.println("Error reading " + name + " because:\n" + e.toString());
+                        }
+                    }
+                    else if (name.toLowerCase().startsWith("frame")) {
+                        String[] id = TextParser.ParseVar(name, " ");
+                        if (id != null && id.length > 2) {
+                            int index;
+                            try {
+                                index = Integer.parseInt(id[2], 16);
+                            } catch (Exception e) {
+                                System.err.println("Error reading " + name + " because:\n" + e.toString());
+                                index = -1;
+                            }
+                            if (index >= 0 && index < 256) {
+                                ss.remove(1);
+                                ss.remove(0);
+                                Frame[index].fromFile(ss);
+                            }
+                        }
+                    }
+                    else if (name.toLowerCase().startsWith("pattern")) {
+                        String[] id = TextParser.ParseVar(name, " ");
+                        if (id != null && id.length > 2) {
+                            int index;
+                            try {
+                                index = Integer.parseInt(id[2], 16);
+                            } catch (Exception e) {
+                                System.err.println("Error reading " + name + " because:\n" + e.toString());
+                                index = -1;
+                            }
+                            if (index >= 0 && index < 256) {
+                                ss.remove(1);
+                                ss.remove(0);
+                                InsPattern[index].fromFile(ss);
+                            }
+                        }
+                    }
+                    else if (name.toLowerCase().startsWith("pcmpattern")) {
+                        String[] id = TextParser.ParseVar(name, " ");
+                        if (id != null && id.length > 2) {
+                            int index;
+                            try {
+                                index = Integer.parseInt(id[2], 16);
+                            } catch (Exception e) {
+                                System.err.println("Error reading " + name + " because:\n" + e.toString());
+                                index = -1;
+                            }
+                            if (index >= 0 && index < 256) {
+                                ss.remove(1);
+                                ss.remove(0);
+                                PCMPattern[index].fromFile(ss);
+                            }
+                        }
+                    }
+                }
+                else if (prefix.equals("#")) {
+                    String tmp = iter.next();
+                    String[] variable = TextParser.ParseVar(tmp, prefix.substring(1, 1));
+                    if (variable != null && variable.length > 2) {
+                        if (variable[2].startsWith("\"") && variable[2].endsWith("\"")) //remove excess quotes
+                            variable[2] = variable[2].substring(1, variable[2].length()-1);
+                        switch (variable[0].toLowerCase()) {
+                            case "name":
+                            case "title":
+                                if (sectionpast < 1) sectionpast = 1;
+                                Name = variable[2];
+                                break;
+                            case "by":
+                            case "author":
+                                if (sectionpast < 2) sectionpast = 2;
+                                Author = variable[2];
+                                break;
+                            default:
+                                //comment is suppose to be between #name\n#author and everything else
+                                if (sectionpast == 2) Comment += tmp + "\n";
+                        }
+                    }
+                }
+            }
+        }
+        return true;
     }
 
     public void newInsPattern(int i) {

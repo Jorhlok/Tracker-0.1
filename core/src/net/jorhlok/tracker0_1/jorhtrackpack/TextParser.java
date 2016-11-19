@@ -35,7 +35,7 @@ public class TextParser {
     }
     
     private void parse() {
-        Elements = new ArrayList<ArrayList<String>>();
+        Elements = new ArrayList<>();
         int i = 0, j, k, l;
         String s;
         ArrayList<String> tmp;
@@ -46,23 +46,8 @@ public class TextParser {
             if (s.length() > 0 && s.charAt(0) == '#') {
                 Elements.add(new ArrayList<String>());
                 tmp = Elements.get(Elements.size()-1);
-                k = s.indexOf('=');
-                l = s.indexOf(':');
-                if (k < 0 && l < 0) { //no seperator
-                    tmp.add("#");
-                    tmp.add(s.substring(1).trim());
-                }
-                else if (k > 0 && l > 0) { //both are present, find the first one
-                    tmp.add( "#" + s.charAt(k = Math.min(k, l)) );
-                }
-                else { //one of them is present
-                    tmp.add( "#" + s.charAt(k = Math.max(k, l)) );
-                }
-                if (k > 0) { //a seperator is present
-                    tmp.add(s.substring(1, k).trim()); //name
-                    if (s.length() > k+1) tmp.add(s.substring(k+1).trim()); //value
-                    else tmp.add(""); //no value present?
-                }
+                tmp.add("#");
+                tmp.add(s.substring(1));
             }
             else if ( s.length() > 0 && (k = s.indexOf('{')) >= 0 ) {
                 Elements.add(new ArrayList<String>());
@@ -107,7 +92,7 @@ public class TextParser {
         }
     }
     
-    public String[] ParseVar(String str, String operands) {
+    static public String[] ParseVar(String str, String operands) {
         if (str == null || operands == null) return null;
         String[] ret = new String[3];
         int j = -1;
@@ -116,15 +101,15 @@ public class TextParser {
             if ( j >= 0 && j < (str.length()-1) ) break;
         }
         if (j < 0) return null;
-        ret[0] = str.substring(0, j);
+        ret[0] = str.substring(0, j).trim();
         ret[1] = str.substring(j+1, j+1);
-        ret[2] = str.substring(j+2, str.length());
+        ret[2] = str.substring(j+2, str.length()).trim();
         return ret;
     }
     
-    public ArrayList<String> ParseArray(String str, char delimiter) {
+    static public ArrayList<String> ParseArray(String str, char delimiter) {
         if (str == null || str.equals("")) return null;
-        ArrayList<String> ret = new ArrayList<String>();
+        ArrayList<String> ret = new ArrayList<>();
         int i=0, j=0;
         while (j >= 0 && j < str.length()) {
             j = str.indexOf(delimiter, i);

@@ -117,7 +117,7 @@ public class jti {
                         if (env != null) {
                             for (ListIterator<String> iter=ss.listIterator(2);iter.hasNext();)
                                 tmp += iter.next();
-                            array = tp.ParseArray(tmp, ',');
+                            array = TextParser.ParseArray(tmp, ',');
                             try {
                                 if (array.size()>6) {
                                     ListIterator<String> iters = array.listIterator();
@@ -149,7 +149,7 @@ public class jti {
                     }
                     else if (name.equalsIgnoreCase("PCMmap")) {
                             if (ss.size() > 2) { //parse mapping
-                                array = tp.ParseArray(ss.get(2), ',');
+                                array = TextParser.ParseArray(ss.get(2), ',');
                                 try {
                                     for (int i=0; i<16 && array.size()>=i; ++i) {
                                         PCM[i] = (short)Integer.parseInt(array.get(i).trim(), 16);
@@ -160,7 +160,7 @@ public class jti {
                                 }
                             }
                             if (ss.size() > 3) { //parse lengths
-                                array = tp.ParseArray(ss.get(3), ',');
+                                array = TextParser.ParseArray(ss.get(3), ',');
                                 try {
                                     for (int i=0; i<16 && array.size()>=i; ++i) {
                                         PCMLength[i] = (byte)Integer.parseInt(array.get(i).trim(), 16);

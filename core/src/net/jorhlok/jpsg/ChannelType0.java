@@ -32,14 +32,12 @@ package net.jorhlok.jpsg;
  */
 public class ChannelType0 {
     static private final int MaxCount = (1 << 24) - 1; //24 bit counter 0 to 2^24-1
-    private byte[] Buffer = new byte[1024];
+    private byte[] Buffer = new byte[256];
     private byte Volume = 0; //0-7 (ghetto volume control)
     private short Loop = 0;
+    private short End = 255;
     private int Counter = 0;
     private int Stepper = 0;
-    
-    @Deprecated
-    private byte Sample = 0;
 
     public byte getVolume() {
         return Volume;
@@ -57,14 +55,12 @@ public class ChannelType0 {
         Loop = (short)(l&255);
     }
 
-    @Deprecated
-    public byte getSample() {
-        return Sample;
+    public short getEnd() {
+        return End;
     }
 
-    @Deprecated
-    public void setSample(int s) {
-        Sample = (byte)s;
+    public void setEnd(int e) {
+        End = (short)(e&255);
     }
     
     public byte[] getBuffer() {
@@ -112,7 +108,7 @@ public class ChannelType0 {
     public byte output() {
         byte sample = Buffer[Counter/(MaxCount+1)*Buffer.length];
         if (sample >= 0) return (byte)( sample>>(7-Volume) );
-        else return (byte)( -1*( (-1*sample)>>(7-Volume) ) );
+        else return (byte)( -1*( (-1*sample)>>(7-Volume) ) ); //might be unnecessary if java's bit shift is arithmetic instead of logical but this doesn't hurt it I guess
     }
     
     public void step() {

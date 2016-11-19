@@ -150,11 +150,32 @@ public class JPSG {
                 Channels1[i].setWidth(w);
             }
             
+        /**channel0 counter
+         @param i select which channel1
+         @param c set counter 0x000000-FFFFFF
+         */
+            public void setCounter0(int i, int c) {
+                if (i < 0 || i >= Channels0.length) return;
+                Channels0[i].setCounter(c);
+            }
+            
+        /**channel0 stepper
+         @param i select which channel1
+         @param s set stepper 0x000000-FFFFFF (controls frequency)
+         */
+            public void setStepper0(int i, int s) {
+//                System.err.printf("%d , %d, %d\n", i , s, Channels0.length);
+                if (i < 0 || i >= Channels0.length) return;
+//                System.err.println("setStepper");
+                Channels0[i].setStepper(s);
+//                System.err.println("Channels0[i].Stepper = s;");
+            }
+            
         /**channel1 counter
          @param i select which channel1
          @param c set counter 0x000000-FFFFFF
          */
-            public void setCounter(int i, int c) {
+            public void setCounter1(int i, int c) {
                 if (i < 0 || i >= Channels1.length) return;
                 Channels1[i].setCounter(c);
             }
@@ -163,7 +184,7 @@ public class JPSG {
          @param i select which channel1
          @param s set stepper 0x000000-FFFFFF (controls frequency)
          */
-            public void setStepper(int i, int s) {
+            public void setStepper1(int i, int s) {
 //                System.err.printf("%d , %d, %d\n", i , s, Channels1.length);
                 if (i < 0 || i >= Channels1.length) return;
 //                System.err.println("setStepper");
@@ -182,24 +203,45 @@ public class JPSG {
             
         /**channel0 volume
          @param i select which channel0
-         @param v option values 0-7 (ghetto volume)
+         @param v volume values 0-7 (ghetto volume)
          */
             public void setVolume(int i, int v) {
                 if (i < 0 || i >= Channels0.length) return;
                 Channels0[i].setVolume(v);
             }
             
+        /**channel0 loop
+         @param i select which channel0
+         @param l loop start values 0-FF
+         */
+            public void setLoop(int i, short l) {
+                if (i < 0 || i >= Channels0.length) return;
+                Channels0[i].setLoop(l);
+            }
+            
+        /**channel0 end
+         @param i select which channel0
+         @param e loop end values 0-FF
+         */
+            public void setEnd(int i, int e) {
+                if (i < 0 || i >= Channels0.length) return;
+                Channels0[i].setEnd(e);
+            }
+            
         /**channel0 sample
          @param i select which channel0
-         @param sam the stored -128 to 127
+         @param buf up to 256 byte of greatness
          */
-            public void setSample(int i, int sam) {
+            public void setBuffer(int i, byte[] buf) {
                 if (i < 0 || i >= Channels0.length) return;
-                Channels0[i].setSample(sam);
+                Channels0[i].setBuffer(buf);
             }
             
         /**increment counters*/
             public void step() {
+                for (int i=0; i<Channels0.length; ++i) {
+                    Channels0[i].step();
+                }
                 for (int i=0; i<Channels1.length; ++i) {
                     Channels1[i].step();
                 }
@@ -207,14 +249,14 @@ public class JPSG {
 
     //reading
         /**get chip model
-         @return chips's model
+         @return chip's model
          */
             public Models getModel() {
                 return Model;
             }
             
         /**get chip model
-         @return chips's model name
+         @return chip's model name
          */
             public String getModelName() {
                 return Model.name;
@@ -266,11 +308,29 @@ public class JPSG {
                 return Channels1[i].getWidth();
             }
             
+        /**channel0 counter
+         @param i select which channel1
+         @return 0x000000-FFFFFF
+         */
+            public int getCounter0(int i) {
+                if (i < 0 || i >= Channels0.length) return 0;
+                return Channels0[i].getCounter();
+            }
+            
+        /**channel0 stepper
+         @param i select which channel1
+         @return 0x000000-FFFFFF
+         */
+            public int getStepper0(int i) {
+                if (i < 0 || i >= Channels0.length) return 0;
+                return Channels0[i].getStepper();
+            }
+            
         /**channel1 counter
          @param i select which channel1
          @return 0x000000-FFFFFF
          */
-            public int getCounter(int i) {
+            public int getCounter1(int i) {
                 if (i < 0 || i >= Channels1.length) return 0;
                 return Channels1[i].getCounter();
             }
@@ -279,7 +339,7 @@ public class JPSG {
          @param i select which channel1
          @return 0x000000-FFFFFF
          */
-            public int getStepper(int i) {
+            public int getStepper1(int i) {
                 if (i < 0 || i >= Channels1.length) return 0;
                 return Channels1[i].getStepper();
             }
@@ -302,13 +362,31 @@ public class JPSG {
                 return Channels0[i].getVolume();
             }
             
-        /**channel0 sample
+        /**channel0 volume
+         @param i select which channel0
+         @return 0-FF loop begin
+         */
+            public short getLoop(int i) {
+                if (i < 0 || i >= Channels0.length) return 0;
+                return Channels0[i].getLoop();
+            }
+            
+        /**channel0 volume
+         @param i select which channel0
+         @return 0-FF loop end
+         */
+            public short getEnd(int i) {
+                if (i < 0 || i >= Channels0.length) return 0;
+                return Channels0[i].getEnd();
+            }
+            
+        /**channel0 buffer
          @param i select which channel0
          @return -128 to 127
          */
-            public byte getSample(int i) {
-                if (i < 0 || i >= Channels0.length) return 0;
-                return Channels0[i].getSample();
+            public byte[] getBuffer(int i) {
+                if (i < 0 || i >= Channels0.length) return null;
+                return Channels0[i].getBuffer();
             }
             
         /**calculate sample data
