@@ -1,6 +1,7 @@
 package net.jorhlok.tracker0_1.jorhtrackpack;
 
 import java.util.ArrayList;
+import java.util.ListIterator;
 
 /**
  * Pattern of standard instruments
@@ -219,6 +220,10 @@ public class insPattern {
     }
     
     public boolean fromFile(ArrayList<String> str) {
-        return false;
+        if (str == null) return false;
+        ListIterator<String> iter = str.listIterator();
+        for (int i=0; i<Length && iter.hasNext(); ++i)
+            noteFromString(iter.nextIndex(),iter.next());
+        return true;
     }
 }

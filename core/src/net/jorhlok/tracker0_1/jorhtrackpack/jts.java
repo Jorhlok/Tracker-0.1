@@ -126,6 +126,9 @@ public class jts {
     public boolean fromFile(TextParser tp) {
         if (tp == null || tp.Elements == null) return false;
         int sectionpast = 0; 
+        ArrayList<ArrayList<String>> frames = new ArrayList<>();
+        ArrayList<ArrayList<String>> pats = new ArrayList<>();
+        ArrayList<ArrayList<String>> pcmpats = new ArrayList<>();
         for (ArrayList<String> ss : tp.Elements) {
             if (ss.size() > 2) {
                 ListIterator<String> iter = ss.listIterator();
@@ -209,9 +212,7 @@ public class jts {
                                 index = -1;
                             }
                             if (index >= 0 && index < 256) {
-                                ss.remove(1);
-                                ss.remove(0);
-                                Frame[index].fromFile(ss);
+                                frames.add((ArrayList<String>)ss.clone());
                             }
                         }
                     }
@@ -226,9 +227,7 @@ public class jts {
                                 index = -1;
                             }
                             if (index >= 0 && index < 256) {
-                                ss.remove(1);
-                                ss.remove(0);
-                                InsPattern[index].fromFile(ss);
+                                pats.add((ArrayList<String>)ss.clone());
                             }
                         }
                     }
@@ -243,9 +242,7 @@ public class jts {
                                 index = -1;
                             }
                             if (index >= 0 && index < 256) {
-                                ss.remove(1);
-                                ss.remove(0);
-                                PCMPattern[index].fromFile(ss);
+                                pcmpats.add((ArrayList<String>)ss.clone());
                             }
                         }
                     }
@@ -275,6 +272,35 @@ public class jts {
                 }
             }
         }
+        //The behavior depends on the Settings {} section so has to be done after
+        for (ArrayList<String> ss : frames) {
+            //already did the checking so just get it done
+            String[] id = TextParser.ParseVar(ss.get(1), " ");
+            ss.remove(1);
+            ss.remove(0);
+            int index = Integer.parseInt(id[2], 16);
+            newFrame(index); //reset Frame
+            Frame[index].fromFile(ss);
+        }
+        for (ArrayList<String> ss : pats) {
+            //already did the checking so just get it done
+            String[] id = TextParser.ParseVar(ss.get(1), " ");
+            ss.remove(1);
+            ss.remove(0);
+            int index = Integer.parseInt(id[2], 16);
+            newInsPattern(index); //reset InsPattern
+            InsPattern[index].fromFile(ss);
+        }
+        for (ArrayList<String> ss : pcmpats) {
+            //already did the checking so just get it done
+            String[] id = TextParser.ParseVar(ss.get(1), " ");
+            ss.remove(1);
+            ss.remove(0);
+            int index = Integer.parseInt(id[2], 16);
+            newPCMPattern(index); //reset PCMPattern
+            PCMPattern[index].fromFile(ss);
+        }
+
         return true;
     }
 

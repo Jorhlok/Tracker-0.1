@@ -1,6 +1,7 @@
 package net.jorhlok.tracker0_1.jorhtrackpack;
 
 import java.util.ArrayList;
+import java.util.ListIterator;
 
 /**
  * frame of patterns
@@ -26,6 +27,26 @@ public class frame {
     }
     
     public boolean fromFile(ArrayList<String> str) {
-        return false;
+        if (str == null) return false;
+        String tmp = "";
+        for (ListIterator<String> iter=str.listIterator(); iter.hasNext();)
+            tmp += iter.next();
+        ArrayList<String> arr = TextParser.ParseArray(tmp, ',');
+        ListIterator<String> iter = arr.listIterator();
+        for (int i=0; i<InsPattern.length && iter.hasNext(); ++i)
+            try {
+                InsPattern[i] = (short)Integer.parseInt(iter.next(), 16);
+                if (InsPattern[i] > 255) InsPattern[i] = -1;
+            } catch (Exception e) {
+                System.err.println("Error loading frame because:\n" + e.toString());
+            }
+        
+        try {
+            PCMPattern = (short)Integer.parseInt(iter.next(), 16);
+            if (PCMPattern > 255) PCMPattern = -1;
+        } catch (Exception e) {
+            System.err.println("Error loading frame because:\n" + e.toString());
+        }
+        return true;
     }
 }

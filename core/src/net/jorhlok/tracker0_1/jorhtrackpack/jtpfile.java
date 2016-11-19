@@ -18,8 +18,8 @@ public class jtpfile {
     public String Author;
     public String Comment;
     public final String[] RecognizedVersions = {
-        //"0.2",
-        "0.1"
+        //"0.1.1",
+        "0.1.0"
     };
     public final String[] RecognizedDescriptions = {
         //"",
