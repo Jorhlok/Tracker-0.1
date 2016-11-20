@@ -239,10 +239,10 @@ public class JPSG {
             
         /**increment counters*/
             public void step() {
-                for (int i=0; i<Channels0.length; ++i) {
+                for (int i=0; Channels0!=null && i<Channels0.length; ++i) {
                     Channels0[i].step();
                 }
-                for (int i=0; i<Channels1.length; ++i) {
+                for (int i=0; Channels1!=null && i<Channels1.length; ++i) {
                     Channels1[i].step();
                 }
             }

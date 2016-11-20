@@ -30,7 +30,7 @@ public class PlayRoutine {
     }
     
     public void update() {
-
+        
         frame f = data.Track[track].Frame[frame];
         if (counter == 0) {
             for (int i=0; i<Channels1.length; ++i) {

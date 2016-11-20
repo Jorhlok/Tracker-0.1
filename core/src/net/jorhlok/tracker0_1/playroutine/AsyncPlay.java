@@ -41,7 +41,7 @@ public class AsyncPlay implements AsyncTask {
             noise[i] = pr.Channels1[i].getNoise()?1:0;
         }
 //        System.err.println("updated chip");
-        
+
         chip.setStereo(1, stereo);
         chip.setNoise(noise);
         

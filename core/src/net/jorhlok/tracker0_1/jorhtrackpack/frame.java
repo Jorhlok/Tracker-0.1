@@ -39,6 +39,7 @@ public class frame {
                 if (InsPattern[i] > 255) InsPattern[i] = -1;
             } catch (Exception e) {
                 System.err.println("Error loading frame because:\n" + e.toString());
+                Thread.dumpStack();
             }
         
         try {
@@ -46,6 +47,7 @@ public class frame {
             if (PCMPattern > 255) PCMPattern = -1;
         } catch (Exception e) {
             System.err.println("Error loading frame because:\n" + e.toString());
+            Thread.dumpStack();
         }
         return true;
     }

@@ -21,8 +21,8 @@ public class saveload extends page {
     float FileSuccess = 0;
     float SuccessTime = 4;
     
-    TextBox PathLoad = new TextBox("~/Documents/jtp/a.jtp");
-    TextBox PathSave = new TextBox("~/Documents/jtp/a.jtp");
+    TextBox PathLoad = new TextBox("c:/users/jorhlok/desktop/something.jtp");
+    TextBox PathSave = new TextBox("c:/users/jorhlok/desktop/something.jtp");
     
     public saveload() {
         super();

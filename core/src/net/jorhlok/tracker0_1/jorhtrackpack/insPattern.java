@@ -146,13 +146,13 @@ public class insPattern {
         if (index < Length) {
             try {
                 String str = input;
-                int newline = str.indexOf('\n');
-                if (newline >= 0) str = str.substring(0, newline);
-                str = str.trim();
+//                int newline = str.indexOf('\n');
+//                if (newline >= 0) str = str.substring(0, newline);
+//                str = str.trim();
                 Note[index] = str.substring(0,Math.min(6,str.length()));
                 str = str.substring(6);
 
-                while (str.charAt(0) == ' ' || str.charAt(0) == '\t') str = str.substring(1);
+                //while (str.charAt(0) == ' ' || str.charAt(0) == '\t') str = str.substring(1);
                 try {
                     Stereo[index] = (byte) Integer.parseInt(str.substring(0, 1), 16);
                 } catch (Exception e) {
@@ -161,7 +161,7 @@ public class insPattern {
                 if (Stereo[index] < -1 || Stereo[index] > 3) Stereo[index] = -1;
                 str = str.substring(1);
 
-                while (str.charAt(0) == ' ' || str.charAt(0) == '\t') str = str.substring(1);
+                //while (str.charAt(0) == ' ' || str.charAt(0) == '\t') str = str.substring(1);
                 try {
                     Volume[index] = (byte) Integer.parseInt(str.substring(0, 1), 16);
                 } catch (Exception e) {
@@ -170,7 +170,16 @@ public class insPattern {
                 if (Volume[index] < -1 || Volume[index] > 15) Volume[index] = -1;
                 str = str.substring(1);
 
-                while (str.charAt(0) == ' ' || str.charAt(0) == '\t') str = str.substring(1);
+                //while (str.charAt(0) == ' ' || str.charAt(0) == '\t') str = str.substring(1);
+                try {
+                    Width[index] = (byte) Integer.parseInt(str.substring(0, 1), 16);
+                } catch (Exception e) {
+                    Width[index] = -1;
+                }
+                if (Width[index] < -1 || Width[index] > 15) Width[index] = -1;
+                str = str.substring(1);
+
+                //while (str.charAt(0) == ' ' || str.charAt(0) == '\t') str = str.substring(1);
                 try {
                     Instrument[index] = (byte) Integer.parseInt(str.substring(0, 2), 16);
                 } catch (Exception e) {
@@ -179,13 +188,13 @@ public class insPattern {
                 if (Instrument[index] < -1 || Instrument[index] > 255) Instrument[index] = -1;
                 str = str.substring(2);
 
-                while (str.charAt(0) == ' ' || str.charAt(0) == '\t') str = str.substring(1);
+                //while (str.charAt(0) == ' ' || str.charAt(0) == '\t') str = str.substring(1);
                 if (str.length() < 3) Effect[index] = ' ';
                 else Effect[index] = str.charAt(0);
                 if (Effect[index] < 0x20 || Effect[index] > 0xFE) Effect[index] = ' ';
                 str = str.substring(1);
 
-                while (str.charAt(0) == ' ' || str.charAt(0) == '\t') str = str.substring(1);
+                //while (str.charAt(0) == ' ' || str.charAt(0) == '\t') str = str.substring(1);
                 try {
                     FX1[index] = (byte) Integer.parseInt(str.substring(0, 1), 16);
                 } catch (Exception e) {
@@ -194,7 +203,7 @@ public class insPattern {
                 if (FX1[index] < -1 || FX1[index] > 15) FX1[index] = -1;
                 str = str.substring(1);
 
-                while (str.charAt(0) == ' ' || str.charAt(0) == '\t') str = str.substring(1);
+                //while (str.charAt(0) == ' ' || str.charAt(0) == '\t') str = str.substring(1);
                 try {
                     FX2[index] = (byte) Integer.parseInt(str.substring(0, 1), 16);
                 } catch (Exception e) {
@@ -204,6 +213,7 @@ public class insPattern {
             } catch (Exception e) {
                 //so I don't have to check if I've run out of characters every other line of code
                 System.err.println("Error reading note from string. May have read partial string: " + input + "\n\n" + e.toString());
+                Thread.dumpStack();
             }
         }
     }

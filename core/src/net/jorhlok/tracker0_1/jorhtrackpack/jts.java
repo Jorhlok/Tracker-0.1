@@ -151,6 +151,7 @@ public class jts {
                                             Length = (short)Integer.parseInt(variable[2], 16);
                                         } catch (Exception e) {
                                             System.err.println("Error reading " + variable[0] + " because:\n" + e.toString());
+                                            Thread.dumpStack();
                                         }
                                         break;
                                     case "patternlength":
@@ -158,6 +159,7 @@ public class jts {
                                             PatternLength = (short)Integer.parseInt(variable[2], 16);
                                         } catch (Exception e) {
                                             System.err.println("Error reading " + variable[0] + " because:\n" + e.toString());
+                                            Thread.dumpStack();
                                         }
                                         break;
                                     case "samplerate":
@@ -165,23 +167,26 @@ public class jts {
                                             SampleRate = Float.parseFloat(variable[2]);
                                         } catch (Exception e) {
                                             System.err.println("Error reading " + variable[0] + " because:\n" + e.toString());
+                                            Thread.dumpStack();
                                         }
                                         break;
                                     case "samplesperupdate":
                                         try {
-                                            SamplesPerUpdate = Integer.parseInt(variable[2], 16);
+                                            SamplesPerUpdate = Integer.parseInt(variable[2]);
                                         } catch (Exception e) {
                                             System.err.println("Error reading " + variable[0] + " because:\n" + e.toString());
+                                            Thread.dumpStack();
                                         }
                                         break;
                                     case "noteupdatepattern":
                                         try {
                                             ArrayList<String> arr = TextParser.ParseArray(variable[2], ',');
                                             NoteUpdatePattern = new byte[arr.size()];
-                                            for (ListIterator<String> iter2=arr.listIterator(); iter.hasNext();)
+                                            for (ListIterator<String> iter2=arr.listIterator(); iter2.hasNext();)
                                                 NoteUpdatePattern[iter2.nextIndex()] = (byte)Integer.parseInt(iter2.next(), 16);
                                         } catch (Exception e) {
                                             System.err.println("Error reading " + variable[0] + " because:\n" + e.toString());
+                                            Thread.dumpStack();
                                         }
                                         break;
                                 }
@@ -199,6 +204,7 @@ public class jts {
                                 Sequence[iter2.nextIndex()] = (short)Integer.parseInt(iter2.next(), 16);
                         } catch (Exception e) {
                             System.err.println("Error reading " + name + " because:\n" + e.toString());
+                            Thread.dumpStack();
                         }
                     }
                     else if (name.toLowerCase().startsWith("frame")) {
@@ -209,6 +215,7 @@ public class jts {
                                 index = Integer.parseInt(id[2], 16);
                             } catch (Exception e) {
                                 System.err.println("Error reading " + name + " because:\n" + e.toString());
+                                Thread.dumpStack();
                                 index = -1;
                             }
                             if (index >= 0 && index < 256) {
@@ -224,6 +231,7 @@ public class jts {
                                 index = Integer.parseInt(id[2], 16);
                             } catch (Exception e) {
                                 System.err.println("Error reading " + name + " because:\n" + e.toString());
+                                Thread.dumpStack();
                                 index = -1;
                             }
                             if (index >= 0 && index < 256) {
@@ -239,6 +247,7 @@ public class jts {
                                 index = Integer.parseInt(id[2], 16);
                             } catch (Exception e) {
                                 System.err.println("Error reading " + name + " because:\n" + e.toString());
+                                Thread.dumpStack();
                                 index = -1;
                             }
                             if (index >= 0 && index < 256) {

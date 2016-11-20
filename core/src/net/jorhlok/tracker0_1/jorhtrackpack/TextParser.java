@@ -113,8 +113,8 @@ public class TextParser {
         int i=0, j=0;
         while (j >= 0 && j < str.length()) {
             j = str.indexOf(delimiter, i);
-            if (j < 0) ret.add(str.substring(i));
-            else ret.add(str.substring(i, j));
+            if (j < 0) ret.add(str.substring(i).trim());
+            else ret.add(str.substring(i, j).trim());
             i = j+1;
         }
         return ret;
