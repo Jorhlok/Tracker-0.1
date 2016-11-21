@@ -30,8 +30,7 @@ public class PlayRoutine {
             PrChan1[i] = new ChannelModel1();
         }
         data = null;
-        track = frame = line = counter = playmode = 0;
-        counts = 15;
+        track = frame = line = counter = counts = playmode = 0;
         if (StepperTable == null) makeTable();
     }
     
@@ -40,49 +39,65 @@ public class PlayRoutine {
         if (playing == 2) {
             for (int i=0; i<PrChan1.length; ++i)
                 if (PrChan1[i].Retrig) PrChan1[i].Retrig = Channels1[i].Retrig;
-            frame f = data.Track[track].Frame[frame];
+            frame f = data.Track[track].Frame[data.Track[track].Sequence[frame]];
+            
             if (counter == 0) {
-                for (int i=0; i<PrChan1.length; ++i) {
+                if (++counts >= data.Track[track].NoteUpdatePattern.length)
+                    counts = 0;
+                
+                for (int i=0; i<PrChan1.length; ++i) try {
                     insPattern patt = data.Track[0].InsPattern[ f.InsPattern[i] ];
                     int tmp = parseNote(patt.Note[line]);
                     if (tmp >= 0) {
                         PrChan1[i].Stepper = tmp;
                         PrChan1[i].Retrig = true;
-                        System.err.println("step");
                     }
                     tmp = patt.Stereo[line];
                     if (tmp >= 0) {
                         PrChan1[i].Stereo = (byte)tmp;
-                        System.err.println("stereo");
                     }
                     tmp = patt.Volume[line];
                     if (tmp >= 0) {
                         PrChan1[i].Volume = (byte)tmp;
-                        System.err.println("volume");
                     }
                     tmp = patt.Width[line];
                     if (tmp >= 0) {
                         PrChan1[i].Width = (byte)tmp;
-                        System.err.println("width");
                     }
                     tmp = patt.Instrument[line];
                     if (tmp >= 0) {
                         PrChan1[i].Instrument = data.InsType1[tmp];
-                        System.err.println("ins");
                     }
+                    tmp = patt.Effect[line];
+                    if (tmp >= 0) {
+                        PrChan1[i].Effect = (char)tmp;
+                    }
+                    tmp = patt.FX1[line];
+                    if (tmp >= 0) {
+                        PrChan1[i].FX1 = (byte)tmp;
+                    }
+                    tmp = patt.FX2[line];
+                    if (tmp >= 0) {
+                        PrChan1[i].FX2 = (byte)tmp;
+                    }
+                } catch (Exception e) {
+                    System.err.println("Error processing channel " + i + " because: " + e.toString());
                 }
             }
-
+            
             for (int i=0; i<PrChan1.length; ++i) {
                 PrChan1[i].step();
-                //cope private to public
-                Channels1[i].copy(PrChan1[i]);
+                Channels1[i].copy(PrChan1[i]); //copy private to public
             }
-
-            if (++counter >= counts) {
-                line = ++line%32;
+            
+            if (++counter >= data.Track[track].NoteUpdatePattern[counts]) {
+                if (++line >= data.Track[track].PatternLength) {
+                    line = 0;
+                    if (++frame >= data.Track[track].Length) {
+                        frame = data.Track[track].Loop;
+                    }
+                }
                 counter = 0;
-                System.err.println(line);
             }
         }
         else {
@@ -95,6 +110,7 @@ public class PlayRoutine {
                 frame = 0;
                 line = 0;
                 counter = 0;
+                counts = 0;
                 for (ChannelModel1 m : PrChan1) {
                     m = new ChannelModel1();
                 }

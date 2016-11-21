@@ -38,16 +38,14 @@ public class frame {
                 InsPattern[i] = (short)Integer.parseInt(iter.next(), 16);
                 if (InsPattern[i] > 255) InsPattern[i] = -1;
             } catch (Exception e) {
-                System.err.println("Error loading frame because:\n" + e.toString());
-                Thread.dumpStack();
+                InsPattern[i] = -1;
             }
         
         try {
             PCMPattern = (short)Integer.parseInt(iter.next(), 16);
             if (PCMPattern > 255) PCMPattern = -1;
         } catch (Exception e) {
-            System.err.println("Error loading frame because:\n" + e.toString());
-            Thread.dumpStack();
+            PCMPattern = -1;
         }
         return true;
     }

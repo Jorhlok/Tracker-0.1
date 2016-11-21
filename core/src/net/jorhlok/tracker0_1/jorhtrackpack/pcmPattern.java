@@ -126,8 +126,8 @@ public class pcmPattern {
                 if (Waveform[index] < -1 || Waveform[index] > 255) Waveform[index] = -1;
             } catch (Exception e) {
                 //so I don't have to check if I've run out of characters every other line of code
-                System.err.println("Error reading note from string. May have read partial string: " + input + "\n\n" + e.toString());
-                Thread.dumpStack();
+                System.err.println("Error reading note from string. May have read partial string \"" + input.trim() + "\" because: " + e.toString());
+//                Thread.dumpStack();
             }
         }
     }

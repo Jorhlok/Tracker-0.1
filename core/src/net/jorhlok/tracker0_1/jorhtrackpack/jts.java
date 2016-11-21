@@ -38,6 +38,9 @@ public class jts {
         Frame = new frame[256];
         InsPattern = new insPattern[256];
         PCMPattern = new pcmPattern[256];
+        NoteUpdatePattern = new byte[2];
+        NoteUpdatePattern[0] = 7;
+        NoteUpdatePattern[1] = 8;
         
         TargetChip = "JPSG1609S"; //all the bells and whistles by default
         PatternLength = 32;
@@ -68,7 +71,7 @@ public class jts {
         ret += "\n\tSampleRate = ";
         ret += Float.toString(SampleRate); //only non-int and only decimal
         ret += "\n\tSamplesPerUpdate = ";
-        ret += Integer.toHexString(SamplesPerUpdate).toUpperCase();
+        ret += Integer.toString(SamplesPerUpdate).toUpperCase();
         ret += "\n\tNoteUpdatePattern = ";
         if (NoteUpdatePattern != null && NoteUpdatePattern.length > 0) {
             ret += Integer.toHexString(NoteUpdatePattern[0]);
@@ -150,6 +153,14 @@ public class jts {
                                     case "length":
                                         try {
                                             Length = (short)Integer.parseInt(variable[2], 16);
+                                        } catch (Exception e) {
+                                            System.err.println("Error reading " + variable[0] + " because:\n" + e.toString());
+                                            Thread.dumpStack();
+                                        }
+                                        break;
+                                    case "loop":
+                                        try {
+                                            Loop = (short)Integer.parseInt(variable[2], 16);
                                         } catch (Exception e) {
                                             System.err.println("Error reading " + variable[0] + " because:\n" + e.toString());
                                             Thread.dumpStack();
@@ -310,7 +321,7 @@ public class jts {
             newPCMPattern(index); //reset PCMPattern
             PCMPattern[index].fromFile(ss);
         }
-
+        
         return true;
     }
 

@@ -283,8 +283,11 @@ public class tracker0_1 extends ApplicationAdapter {
 
         
         batch.begin();
-        
+        try {
         CurrentPage.draw(batch, font, Gdx.graphics.getDeltaTime());
+        } catch (Exception e) {
+            System.err.println("Some error drawing " + CurrentPage.getClass().getTypeName() + " because:\n" + e.toString());
+        }
 //        PEdit.draw(batch, font, Gdx.graphics.getDeltaTime());
 //        SL.draw(batch, font, Gdx.graphics.getDeltaTime());
 

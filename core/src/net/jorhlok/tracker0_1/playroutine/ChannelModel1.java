@@ -12,6 +12,7 @@ public class ChannelModel1 {
     public boolean Retrig = false;
     public boolean Release = false;
     public int Stepper = 0;
+    public byte Noise = 0;
 //    public int Note = 0; // 0 to 12^5-1 or 248831
     public byte Stereo = 0;
     public byte Volume = 0;
@@ -53,6 +54,7 @@ public class ChannelModel1 {
         Retrig = that.Release;
         Release = that.Retrig;
         Stepper = that.Stepper;
+        Noise = that.Noise;
         Stereo = that.Stereo;
         Volume = that.Volume;
         Width = that.Width;
@@ -83,7 +85,11 @@ public class ChannelModel1 {
     }
     
     public void step() {
-        
+        switch (Effect) {
+            case 'n':
+                Noise = FX1;
+                break;
+        }
     }
     
     public int getStepper() {
@@ -104,7 +110,7 @@ public class ChannelModel1 {
     }
     
     public boolean getNoise() {
-        return false;
+        return Noise > 0;
     }
     
     public short getSamples() {
@@ -115,7 +121,11 @@ public class ChannelModel1 {
     }
     
     public byte getNSamples() {
-        if (Instrument != null) {
+        if (getNoise()) {
+            if (Noise == 1) return 0;
+            return 1;
+        }
+        else if (Instrument != null) {
             return Instrument.PCMLength[getVolume()];
         }
         return 0;

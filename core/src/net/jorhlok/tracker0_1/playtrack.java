@@ -57,6 +57,14 @@ public class playtrack extends page {
                             break;
                         default:
                             //change frame
+                            try {
+                                int index = Integer.parseInt(FrameSelect.Text, 16);
+                                aplay.pr.frame = index;
+                                aplay.pr.line = aplay.pr.counter = 0;
+                                //TODO : add thread safety
+                            } catch (Exception e) {
+                                //nothing
+                            }
                     }
                     break;
             }
@@ -73,7 +81,10 @@ public class playtrack extends page {
         drawButton(batch, font, deltaTime, " PAUSE ", fg2, (xCursor == 1)?flc:bgn, 8*8, 7);
         drawButton(batch, font, deltaTime, " STOP ", fg4, (xCursor == 2)?flc:bgn, 8*16, 7);
         FrameSelect.draw(batch, font, deltaTime, fg3, flc, 8*23, 464-7, xCursor-3, false);
-        drawButton(batch, font, deltaTime, " Frame " + Integer.toHexString(aplay.pr.frame) + aplay.pr.data.Track[aplay.pr.track].Frame[aplay.pr.frame].toString() + " ", fg2, bgn, 8, 14*2);
+        drawButton(batch, font, deltaTime, " " + Integer.toHexString(aplay.pr.frame) 
+                + " Frame " + Integer.toHexString(aplay.pr.data.Track[aplay.pr.track].Sequence[aplay.pr.frame]) 
+                + " " + aplay.pr.data.Track[aplay.pr.track].Frame[aplay.pr.data.Track[aplay.pr.track].Sequence[aplay.pr.frame]].toString() 
+                + " Line " + Integer.toHexString(aplay.pr.line) + " ", fg2, bgn, 8, 14*2);
         
         short[] buf = aplay.dispBuf.clone();
         float[] left = new float[buf.length/2];
