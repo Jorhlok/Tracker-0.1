@@ -48,6 +48,39 @@ public class ChannelModel1 {
     public byte WCounter;
     public byte WStepper;
     
+    public void copy(ChannelModel1 that) {
+        Instrument = that.Instrument;
+        Retrig = that.Release;
+        Release = that.Retrig;
+        Stepper = that.Stepper;
+        Stereo = that.Stereo;
+        Volume = that.Volume;
+        Width = that.Width;
+        EnvelopeIndex = that.EnvelopeIndex;
+        Effect = that.Effect;
+        FX1 = that.FX1;
+        FX2 = that.FX2;
+        FXIndex = that.FXIndex;
+        SEnvIndex = that.SEnvIndex;
+        VEnvIndex = that.VEnvIndex;
+        WEnvIndex = that.WEnvIndex;
+        VibLo = that.VibLo;
+        VibMi = that.VibMi;
+        VibHi = that.VibHi;
+        VibIndex = that.VibIndex;
+        VibStepper = that.VibStepper;
+        VibMode = that.VibMode;
+        VolLo = that.VolLo;
+        VolHi = that.VolHi;
+        VolIndex = that.VolIndex;
+        VolCounter = that.VolCounter;
+        VolStepper = that.VolStepper;
+        WLo = that.WLo;
+        WHi = that.WHi;
+        WIndex = that.WIndex;
+        WCounter = that.WCounter;
+        WStepper = that.WStepper;
+    }
     
     public void step() {
         

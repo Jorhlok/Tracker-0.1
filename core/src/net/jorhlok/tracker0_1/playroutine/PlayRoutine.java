@@ -17,61 +17,88 @@ public class PlayRoutine {
     public int line;
     public int counter;
     public int counts;
+    public byte playmode; //0-stopped 1-reset 2-playing 
     
     public ChannelModel1[] Channels1;
+    private ChannelModel1[] PrChan1;
     
     public PlayRoutine() {
         Channels1 = new ChannelModel1[8];
-        for (int i=0; i<Channels1.length; ++i) Channels1[i] = new ChannelModel1();
+        PrChan1 = new ChannelModel1[8];
+        for (int i=0; i<Channels1.length; ++i) {
+            Channels1[i] = new ChannelModel1();
+            PrChan1[i] = new ChannelModel1();
+        }
         data = null;
-        track = frame = line = counter = 0;
+        track = frame = line = counter = playmode = 0;
         counts = 15;
         if (StepperTable == null) makeTable();
     }
     
     public void update() {
-        
-        frame f = data.Track[track].Frame[frame];
-        if (counter == 0) {
-            for (int i=0; i<Channels1.length; ++i) {
-                insPattern patt = data.Track[0].InsPattern[ f.InsPattern[i] ];
-                int tmp = parseNote(patt.Note[line]);
-                if (tmp >= 0) {
-                    Channels1[i].Stepper = tmp;
-                    Channels1[i].Retrig = true;
-                    System.err.println("step");
-                }
-                tmp = patt.Stereo[line];
-                if (tmp >= 0) {
-                    Channels1[i].Stereo = (byte)tmp;
-                    System.err.println("stereo");
-                }
-                tmp = patt.Volume[line];
-                if (tmp >= 0) {
-                    Channels1[i].Volume = (byte)tmp;
-                    System.err.println("volume");
-                }
-                tmp = patt.Width[line];
-                if (tmp >= 0) {
-                    Channels1[i].Width = (byte)tmp;
-                    System.err.println("width");
-                }
-                tmp = patt.Instrument[line];
-                if (tmp >= 0) {
-                    Channels1[i].Instrument = data.InsType1[tmp];
-                    System.err.println("ins");
+        byte playing = playmode;
+        if (playing == 2) {
+            for (int i=0; i<PrChan1.length; ++i)
+                if (PrChan1[i].Retrig) PrChan1[i].Retrig = Channels1[i].Retrig;
+            frame f = data.Track[track].Frame[frame];
+            if (counter == 0) {
+                for (int i=0; i<PrChan1.length; ++i) {
+                    insPattern patt = data.Track[0].InsPattern[ f.InsPattern[i] ];
+                    int tmp = parseNote(patt.Note[line]);
+                    if (tmp >= 0) {
+                        PrChan1[i].Stepper = tmp;
+                        PrChan1[i].Retrig = true;
+                        System.err.println("step");
+                    }
+                    tmp = patt.Stereo[line];
+                    if (tmp >= 0) {
+                        PrChan1[i].Stereo = (byte)tmp;
+                        System.err.println("stereo");
+                    }
+                    tmp = patt.Volume[line];
+                    if (tmp >= 0) {
+                        PrChan1[i].Volume = (byte)tmp;
+                        System.err.println("volume");
+                    }
+                    tmp = patt.Width[line];
+                    if (tmp >= 0) {
+                        PrChan1[i].Width = (byte)tmp;
+                        System.err.println("width");
+                    }
+                    tmp = patt.Instrument[line];
+                    if (tmp >= 0) {
+                        PrChan1[i].Instrument = data.InsType1[tmp];
+                        System.err.println("ins");
+                    }
                 }
             }
+
+            for (int i=0; i<PrChan1.length; ++i) {
+                PrChan1[i].step();
+                //cope private to public
+                Channels1[i].copy(PrChan1[i]);
+            }
+
+            if (++counter >= counts) {
+                line = ++line%32;
+                counter = 0;
+                System.err.println(line);
+            }
         }
-        
-        for (ChannelModel1 m : Channels1) {
-            m.step();
-        }
-        
-        if (++counter >= counts) {
-            line = ++line%32;
-            counter = 0;
-            System.err.println(line);
+        else {
+            //report nothing
+            for (ChannelModel1 m : Channels1) {
+                m.Stereo = 0; //mute
+            }
+            if (playing == 1) {
+                playmode = 0;
+                frame = 0;
+                line = 0;
+                counter = 0;
+                for (ChannelModel1 m : PrChan1) {
+                    m = new ChannelModel1();
+                }
+            }
         }
     }
     

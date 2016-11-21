@@ -45,12 +45,15 @@ public class playtrack extends page {
                     switch (xCursor) {
                         case 0:
                             //play
+                            aplay.pr.playmode = 2;
                             break;
                         case 1:
                             //pause
+                            aplay.pr.playmode = 0;
                             break;
                         case 2:
                             //stop
+                            aplay.pr.playmode = 1;
                             break;
                         default:
                             //change frame
