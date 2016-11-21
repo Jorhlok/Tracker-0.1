@@ -117,13 +117,4 @@ public class saveload extends page {
         }
     }
     
-    private void drawButton(Batch batch, BitmapFont font, float deltaTime, String button, Color col, Color back, int xoff, int yoff) {
-        font.setColor(back);
-        String str = "";
-        for (int i=0; i<button.length(); ++i)
-            str += "█";
-        font.draw(batch, str, xoff, 464-yoff);
-        font.setColor(col);
-        font.draw(batch, button, xoff, 464-yoff);
-    }
 }

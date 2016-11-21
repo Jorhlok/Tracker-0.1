@@ -13,6 +13,7 @@ public class AsyncPlay implements AsyncTask {
     public PlayRoutine pr;
     public JPSG chip = new JPSG(JPSG.Models.JPSG1608S);
     public short[] output;
+    public short[] dispBuf;
     public int buffer = 44100/60;
     public ChannelType1 ch = new ChannelType1();
     
@@ -54,6 +55,7 @@ public class AsyncPlay implements AsyncTask {
             output[i] = samp[0];
             output[i+1] = samp[1];
         }
+        dispBuf = output.clone();
 //        System.err.println(Arrays.toString(output));
         return 0;
     }

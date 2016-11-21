@@ -31,6 +31,7 @@ public class jts {
     public jts() {
         Name = Author = Comment = null;
         
+        Loop = 0;
         Length = 0;
         Sequence = new short[256];
         for (short i=0; i<256; ++i) { Sequence[i] = -1; }

@@ -52,6 +52,7 @@ public class tracker0_1 extends ApplicationAdapter {
     page CurrentPage;
     patternEdit PEdit;
     saveload SL;
+    playtrack PT;
     
     AsyncPlay aplay;
     AudioInterface audio;
@@ -195,16 +196,17 @@ public class tracker0_1 extends ApplicationAdapter {
         
         PEdit = new patternEdit();
         SL = new saveload();
+        PT = new playtrack();
         
         CurrentPage = SL;
         
-        PEdit.fg1 = SL.fg1 = fg1;
-        PEdit.fg2 = SL.fg2 = fg2;
-        PEdit.fg3 = SL.fg3 = fg3;
-        PEdit.fg4 = SL.fg4 = fg4;
-        PEdit.flc = SL.flc = flc;
-        PEdit.bgc = SL.bgc = bgc;
-        PEdit.bgn = SL.bgn = bgn;
+        PEdit.fg1 = SL.fg1 = PT.fg1 = fg1;
+        PEdit.fg2 = SL.fg2 = PT.fg2 = fg2;
+        PEdit.fg3 = SL.fg3 = PT.fg3 = fg3;
+        PEdit.fg4 = SL.fg4 = PT.fg4 = fg4;
+        PEdit.flc = SL.flc = PT.flc = flc;
+        PEdit.bgc = SL.bgc = PT.bgc = bgc;
+        PEdit.bgn = SL.bgn = PT.bgn = bgn;
         
         PEdit.jtp = SL.jtp = jtp;
         PEdit.Track = 0;
@@ -224,6 +226,8 @@ public class tracker0_1 extends ApplicationAdapter {
         
         audio.setAPlay(aplay);
         audio.create();
+
+        PT.aplay = aplay;
     }
 
     @Override
@@ -234,7 +238,10 @@ public class tracker0_1 extends ApplicationAdapter {
                 //trap ctrl+tab
                 //switch to sub-page
                 if (CurrentPage instanceof patternEdit) {
-                    
+                    CurrentPage = PT;
+                }
+                else if (CurrentPage instanceof playtrack) {
+                    CurrentPage = PEdit;
                 }
                 else if (CurrentPage instanceof saveload) {
                     
@@ -245,6 +252,9 @@ public class tracker0_1 extends ApplicationAdapter {
                 //switch to next page
                 if (CurrentPage instanceof patternEdit) {
                     CurrentPage = SL;
+                }
+                else if (CurrentPage instanceof playtrack) {
+                    
                 }
                 else if (CurrentPage instanceof saveload) {
                     CurrentPage = PEdit;
@@ -266,6 +276,7 @@ public class tracker0_1 extends ApplicationAdapter {
         
         PEdit.update();
         SL.update();
+        PT.update();
         
         Gdx.gl.glClearColor(bgc.r,bgc.g,bgc.b,bgc.a);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);

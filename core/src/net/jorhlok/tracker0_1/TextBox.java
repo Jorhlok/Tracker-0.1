@@ -36,6 +36,7 @@ public class TextBox {
     }
     
     public void delete(int xc, boolean insert) {
+        try {
         if (Text.length() > 0) {
             if (insert) --xc;
             if (xc == Text.length()-2)
@@ -43,9 +44,13 @@ public class TextBox {
             else if (xc < Text.length()-1)
                 Text = Text.substring(0,xc+1) + Text.substring(xc+2);
         }
+        } catch (Exception e) {
+            System.err.println("Error typing in text box " + Text);
+        }
     }
     
     public void backspace(int xc) {
+        try {
         if (Text.length() > 0) {
             if (xc == 1)
                 Text = Text.substring(xc--);
@@ -54,14 +59,21 @@ public class TextBox {
             else if (xc != 0)
                 Text = Text.substring(0,xc-1) + Text.substring(xc--);
         }
+        } catch (Exception e) {
+            System.err.println("Error typing in text box " + Text);
+        }
     }
     
     public void type(char c, int xc, boolean insert) {
-        if (xc == Text.length())
-            Text += c;
-        else if (insert)
-            Text = Text.substring(0, xc) + c + Text.substring(xc);
-        else 
-            Text = Text.substring(0, xc) + c + Text.substring(xc+1);
+        try {
+            if (xc == Text.length())
+                Text += c;
+            else if (insert)
+                Text = Text.substring(0, xc) + c + Text.substring(xc);
+            else 
+                Text = Text.substring(0, xc) + c + Text.substring(xc+1);
+        } catch (Exception e) {
+            System.err.println("Error typing in text box " + Text);
+        }
     }
 }

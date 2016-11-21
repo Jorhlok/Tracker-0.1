@@ -21,7 +21,7 @@ public abstract class page {
     Color bgn;
     
     public page() {
-        Event = new Array<Byte>();
+        Event = new Array<>();
     }
     
     public void input(byte e) {
@@ -31,4 +31,14 @@ public abstract class page {
     public abstract void update();
     
     public abstract void draw(Batch batch, BitmapFont font, float deltaTime);
+    
+    protected void drawButton(Batch batch, BitmapFont font, float deltaTime, String button, Color col, Color back, int xoff, int yoff) {
+        font.setColor(back);
+        String str = "";
+        for (int i=0; i<button.length(); ++i)
+            str += "█";
+        font.draw(batch, str, xoff, 464-yoff);
+        font.setColor(col);
+        font.draw(batch, button, xoff, 464-yoff);
+    }
 }
