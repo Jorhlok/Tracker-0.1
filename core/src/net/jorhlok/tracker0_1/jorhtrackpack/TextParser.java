@@ -102,8 +102,8 @@ public class TextParser {
         }
         if (j < 0) return null;
         ret[0] = str.substring(0, j).trim();
-        ret[1] = str.substring(j+1, j+1);
-        ret[2] = str.substring(j+2, str.length()).trim();
+        ret[1] = str.substring(j, j);
+        ret[2] = str.substring(j+1, str.length()).trim();
         return ret;
     }
     

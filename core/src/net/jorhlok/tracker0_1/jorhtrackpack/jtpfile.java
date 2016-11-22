@@ -245,49 +245,53 @@ public class jtpfile {
             ZipEntry ze;
             while ((ze = zin.getNextEntry()) != null) {
                 name = ze.getName();
-                System.out.println(name);
-                str = "";
-                while ((i = zin.read(b)) > 0) {
-                    for (int j=0; j<i; ++j)
-                        str += (char)b[j];
-                }
-                tp.Parse(str);
-                //System.out.println(tp.Elements.toString());
-//                for (ArrayList<String> e : tp.Elements)
-//                    System.out.println(e.toString());
-                if (name.length() > 4) {
-                    int num;
-                    try {
-                        num = Integer.parseInt(name.substring(0, name.length()-4),16);
-                    } catch (Exception e) {
-                        num = -1;
+                try {
+                    System.out.println(name);
+                    str = "";
+                    while ((i = zin.read(b)) > 0) {
+                        for (int j=0; j<i; ++j)
+                            str += (char)b[j];
                     }
-                    boolean result = false;
-                    if (name.equalsIgnoreCase("readme.txt") ) {
-                        result = readmeFromFile(tp);
+                    tp.Parse(str);
+                    //System.out.println(tp.Elements.toString());
+    //                for (ArrayList<String> e : tp.Elements)
+    //                    System.out.println(e.toString());
+                    if (name.length() > 4) {
+                        int num;
+                        try {
+                            num = Integer.parseInt(name.substring(0, name.length()-4),16);
+                        } catch (Exception e) {
+                            num = -1;
+                        }
+                        boolean result = false;
+                        if (name.equalsIgnoreCase("readme.txt") ) {
+                            result = readmeFromFile(tp);
+                        }
+                        else if (num >= 0 && num < 4096 && name.substring(name.length()-3).equalsIgnoreCase("hp4") ) {
+                            if (PCM4[num] == null) PCM4[num] = new byte[64];
+                            result = PCM4FromFile(num, tp);
+                        }
+                        else if (num >= 0 && num < 256 && name.substring(name.length()-3).equalsIgnoreCase("hp8") ) {
+                            if (PCM8[num] == null) PCM8[num] = new byte[256];
+                            result = PCM8FromFile(num, tp);
+                        }
+                        else if (num >= 0 && num < 256 && name.substring(name.length()-3).equalsIgnoreCase("ji0") ) {
+                            if (InsType0[num] == null) newInsType0(num);
+                            result = InsType0[num].fromFile(true, tp);
+                        }
+                        else if (num >= 0 && num < 256 && name.substring(name.length()-3).equalsIgnoreCase("ji1") ) {
+                            if (InsType1[num] == null) newInsType1(num);
+                            result = InsType1[num].fromFile(false, tp);
+                        }
+                        else if (num >= 0 && num < 256 && name.substring(name.length()-3).equalsIgnoreCase("jts") ) {
+                            newTrack(num);
+                            result = Track[num].fromFile(tp);
+                        }
+
+                        if (!result) System.err.println("Error reading " + name);
                     }
-                    else if (num >= 0 && num < 4096 && name.substring(name.length()-3).equalsIgnoreCase("hp4") ) {
-                        if (PCM4[num] == null) PCM4[num] = new byte[64];
-                        result = PCM4FromFile(num, tp);
-                    }
-                    else if (num >= 0 && num < 256 && name.substring(name.length()-3).equalsIgnoreCase("hp8") ) {
-                        if (PCM4[num] == null) PCM4[num] = new byte[256];
-                        result = PCM8FromFile(num, tp);
-                    }
-                    else if (num >= 0 && num < 256 && name.substring(name.length()-3).equalsIgnoreCase("ji0") ) {
-                        if (InsType0[num] == null) newInsType0(num);
-                        result = InsType0[num].fromFile(true, tp);
-                    }
-                    else if (num >= 0 && num < 256 && name.substring(name.length()-3).equalsIgnoreCase("ji1") ) {
-                        if (InsType1[num] == null) newInsType1(num);
-                        result = InsType1[num].fromFile(false, tp);
-                    }
-                    else if (num >= 0 && num < 256 && name.substring(name.length()-3).equalsIgnoreCase("jts") ) {
-                        //newTrack(num);
-                        result = Track[num].fromFile(tp);
-                    }
-                    
-                    if (!result) System.err.println("Error reading " + name);
+                } catch (Exception e) {
+                    System.err.println("Error reading " + name + " because:\n" + e.toString());
                 }
             }
             zin.close();

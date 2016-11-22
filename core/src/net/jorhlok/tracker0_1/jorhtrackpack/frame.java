@@ -19,10 +19,15 @@ public class frame {
     
     @Override
     public String toString() {
-        String ret = "{ " + Integer.toHexString(InsPattern[0]);
-        for (int i=1; i<InsPattern.length; ++i)
-            ret += ", " + Integer.toHexString(InsPattern[i]);
-        ret += ", " + Integer.toHexString(PCMPattern) + "}";
+        String ret;
+        if (InsPattern[0] >= 0 && InsPattern[0] < 256) ret = "{ " + Integer.toHexString(InsPattern[0]);
+        else ret = "{ -";
+        for (int i=1; i<InsPattern.length; ++i) {
+            if (InsPattern[i] >= 0 && InsPattern[i] < 256) ret += " ," + Integer.toHexString(InsPattern[i]);
+            else ret += " ,-";
+        }
+        if (PCMPattern >= 0 && PCMPattern < 256) ret += " ," + Integer.toHexString(PCMPattern) + "}";
+        else ret += " ,-}";
         return ret;
     }
     

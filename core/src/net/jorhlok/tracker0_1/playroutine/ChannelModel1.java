@@ -51,8 +51,8 @@ public class ChannelModel1 {
     
     public void copy(ChannelModel1 that) {
         Instrument = that.Instrument;
-        Retrig = that.Release;
-        Release = that.Retrig;
+        Retrig = that.Retrig;
+        Release = that.Release;
         Stepper = that.Stepper;
         Noise = that.Noise;
         Stereo = that.Stereo;
@@ -97,6 +97,7 @@ public class ChannelModel1 {
     }
     
     public byte getStereo() {
+        if (getStepper() == 0) return 0;
         return Stereo;
     }
     
@@ -115,7 +116,8 @@ public class ChannelModel1 {
     
     public short getSamples() {
         if (Instrument != null) {
-            return Instrument.PCM[getVolume()];
+            if (!getNoise()) return Instrument.PCM[getVolume()];
+            else if (Retrig) return Instrument.PCM[0];
         }
         return 0;
     }

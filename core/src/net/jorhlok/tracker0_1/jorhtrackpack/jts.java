@@ -139,7 +139,7 @@ public class jts {
                 String prefix = iter.next();
                 if (prefix.equals("{}")) {
                     sectionpast = 3;
-                    String name = iter.next();
+                    String name = iter.next().trim();
                     if (name.equalsIgnoreCase("settings")) {
                         while (iter.hasNext()) {
                             String[] variable = TextParser.ParseVar(iter.next(), "=:");
@@ -210,11 +210,13 @@ public class jts {
                         String tmp = "";
                         while (iter.hasNext())
                             tmp += iter.next();
-                        try {
-                            ArrayList<String> arr = TextParser.ParseArray(tmp, ',');
-                            for (ListIterator<String> iter2=arr.listIterator(); iter2.hasNext();)
-                                Sequence[iter2.nextIndex()] = (short)Integer.parseInt(iter2.next(), 16);
+                        
+                        int i = 0;
+                        ArrayList<String> arr = TextParser.ParseArray(tmp, ',');
+                        for (ListIterator<String> iter2=arr.listIterator(); iter2.hasNext();) try {
+                            Sequence[i++] = (short)Integer.parseInt(iter2.next(), 16);
                         } catch (Exception e) {
+                            --i;
                             System.err.println("Error reading " + name + " because:\n" + e.toString());
                             Thread.dumpStack();
                         }
@@ -231,7 +233,11 @@ public class jts {
                                 index = -1;
                             }
                             if (index >= 0 && index < 256) {
-                                frames.add((ArrayList<String>)ss.clone());
+                                frames.add(new ArrayList<String>());
+                                ArrayList<String> f = frames.get(frames.size()-1);
+                                f.add(name);
+                                while (iter.hasNext())
+                                    f.add(iter.next());
                             }
                         }
                     }
@@ -247,7 +253,11 @@ public class jts {
                                 index = -1;
                             }
                             if (index >= 0 && index < 256) {
-                                pats.add((ArrayList<String>)ss.clone());
+                                pats.add(new ArrayList<String>());
+                                ArrayList<String> p = pats.get(pats.size()-1);
+                                p.add(name);
+                                while (iter.hasNext())
+                                    p.add(iter.next());
                             }
                         }
                     }
@@ -263,7 +273,11 @@ public class jts {
                                 index = -1;
                             }
                             if (index >= 0 && index < 256) {
-                                pcmpats.add((ArrayList<String>)ss.clone());
+                                pcmpats.add(new ArrayList<String>());
+                                ArrayList<String> p = pcmpats.get(pcmpats.size()-1);
+                                p.add(name);
+                                while (iter.hasNext())
+                                    p.add(iter.next());
                             }
                         }
                     }
@@ -295,33 +309,41 @@ public class jts {
         }
         //The behavior depends on the Settings {} section so has to be done after
         for (ArrayList<String> ss : frames) {
-            //already did the checking so just get it done
-            String[] id = TextParser.ParseVar(ss.get(1), " ");
-            ss.remove(1);
-            ss.remove(0);
-            int index = Integer.parseInt(id[2], 16);
-            newFrame(index); //reset Frame
-            Frame[index].fromFile(ss);
+            String name = ss.get(0);
+            try {
+                String[] id = TextParser.ParseVar(name, " ");
+                ss.remove(0);
+                int index = Integer.parseInt(id[2], 16);
+                newFrame(index); //reset Frame
+                Frame[index].fromFile(ss);
+            } catch (Exception e) {
+                System.err.println("Error reading " + name + " because: " + e.toString());
+            }
         }
         for (ArrayList<String> ss : pats) {
-            //already did the checking so just get it done
-            String[] id = TextParser.ParseVar(ss.get(1), " ");
-            ss.remove(1);
-            ss.remove(0);
-            int index = Integer.parseInt(id[2], 16);
-            newInsPattern(index); //reset InsPattern
-            InsPattern[index].fromFile(ss);
+            String name = ss.get(0);
+            try {
+                String[] id = TextParser.ParseVar(ss.get(0), " ");
+                ss.remove(0);
+                int index = Integer.parseInt(id[2], 16);
+                newInsPattern(index); //reset InsPattern
+                InsPattern[index].fromFile(ss);
+            } catch (Exception e) {
+                System.err.println("Error reading " + name + " because: " + e.toString());
+            }
         }
         for (ArrayList<String> ss : pcmpats) {
-            //already did the checking so just get it done
-            String[] id = TextParser.ParseVar(ss.get(1), " ");
-            ss.remove(1);
-            ss.remove(0);
-            int index = Integer.parseInt(id[2], 16);
-            newPCMPattern(index); //reset PCMPattern
-            PCMPattern[index].fromFile(ss);
+            String name = ss.get(0);
+            try {
+                String[] id = TextParser.ParseVar(ss.get(0), " ");
+                ss.remove(0);
+                int index = Integer.parseInt(id[2], 16);
+                newPCMPattern(index); //reset PCMPattern
+                PCMPattern[index].fromFile(ss);
+            } catch (Exception e) {
+                System.err.println("Error reading " + name + " because: " + e.toString());
+            }
         }
-        
         return true;
     }
 

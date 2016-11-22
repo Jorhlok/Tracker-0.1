@@ -46,39 +46,43 @@ public class PlayRoutine {
                     counts = 0;
                 
                 for (int i=0; i<PrChan1.length; ++i) try {
-                    insPattern patt = data.Track[0].InsPattern[ f.InsPattern[i] ];
-                    int tmp = parseNote(patt.Note[line]);
-                    if (tmp >= 0) {
-                        PrChan1[i].Stepper = tmp;
-                        PrChan1[i].Retrig = true;
-                    }
-                    tmp = patt.Stereo[line];
-                    if (tmp >= 0) {
-                        PrChan1[i].Stereo = (byte)tmp;
-                    }
-                    tmp = patt.Volume[line];
-                    if (tmp >= 0) {
-                        PrChan1[i].Volume = (byte)tmp;
-                    }
-                    tmp = patt.Width[line];
-                    if (tmp >= 0) {
-                        PrChan1[i].Width = (byte)tmp;
-                    }
-                    tmp = patt.Instrument[line];
-                    if (tmp >= 0) {
-                        PrChan1[i].Instrument = data.InsType1[tmp];
-                    }
-                    tmp = patt.Effect[line];
-                    if (tmp >= 0) {
-                        PrChan1[i].Effect = (char)tmp;
-                    }
-                    tmp = patt.FX1[line];
-                    if (tmp >= 0) {
-                        PrChan1[i].FX1 = (byte)tmp;
-                    }
-                    tmp = patt.FX2[line];
-                    if (tmp >= 0) {
-                        PrChan1[i].FX2 = (byte)tmp;
+                    insPattern patt = null;
+                    if (f != null && f.InsPattern[i] >= 0 && f.InsPattern[i] < 256) 
+                        patt = data.Track[track].InsPattern[ f.InsPattern[i] ];
+                    if (patt != null) {
+                        int tmp = parseNote(patt.Note[line]);
+                        if (tmp >= 0) {
+                            PrChan1[i].Stepper = tmp;
+                            PrChan1[i].Retrig = true;
+                        }
+                        tmp = patt.Stereo[line];
+                        if (tmp >= 0) {
+                            PrChan1[i].Stereo = (byte)tmp;
+                        }
+                        tmp = patt.Volume[line];
+                        if (tmp >= 0) {
+                            PrChan1[i].Volume = (byte)tmp;
+                        }
+                        tmp = patt.Width[line];
+                        if (tmp >= 0) {
+                            PrChan1[i].Width = (byte)tmp;
+                        }
+                        tmp = patt.Instrument[line];
+                        if (tmp >= 0 && tmp < 256) {
+                            PrChan1[i].Instrument = data.InsType1[tmp];
+                        }
+                        tmp = patt.Effect[line];
+                        if (tmp >= 0) {
+                            PrChan1[i].Effect = (char)tmp;
+                        }
+                        tmp = patt.FX1[line];
+                        if (tmp >= 0) {
+                            PrChan1[i].FX1 = (byte)tmp;
+                        }
+                        tmp = patt.FX2[line];
+                        if (tmp >= 0) {
+                            PrChan1[i].FX2 = (byte)tmp;
+                        }
                     }
                 } catch (Exception e) {
                     System.err.println("Error processing channel " + i + " because: " + e.toString());
@@ -111,8 +115,8 @@ public class PlayRoutine {
                 line = 0;
                 counter = 0;
                 counts = 0;
-                for (ChannelModel1 m : PrChan1) {
-                    m = new ChannelModel1();
+                for (int i=0; i<PrChan1.length; ++i) {
+                    PrChan1[i] = new ChannelModel1();
                 }
             }
         }
