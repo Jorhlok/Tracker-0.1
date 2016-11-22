@@ -1,0 +1,11 @@
+time for first section in the original * updates per second / lines for that section in my format
+7.24*60/128
+
+3.39375
+
+~3.4
+34/10
+need to be 4 4's
+3,3,3,4,3,4,3,4,3,4
+
+NoteUpdatePattern = 3,3,3,4,3,4,3,4,3,4

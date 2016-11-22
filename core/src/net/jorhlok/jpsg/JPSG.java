@@ -128,7 +128,7 @@ public class JPSG {
             public void setNoise(int[] nz) {
                 if (nz == null) return;
                 for (int i=0; i<Channels1.length; ++i) 
-                    if (nz[i] > 0) Channels1[0].setNoise(nz[0] != 0);
+                    Channels1[i].setNoise(nz[i] != 0);
             }
             
         /**channel1 sample data
