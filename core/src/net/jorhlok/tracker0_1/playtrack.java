@@ -14,17 +14,22 @@ public class playtrack extends page {
     int xCursor = 0; //0 is play, 1 is pause, 2 is stop, 3+ is FrameSelect
     TextBox FrameSelect = new TextBox("00");
     public AsyncPlay aplay;
+    char ScopeChar = '.';
 
     @Override
     public void update() {
         while (Event.size > 0) {
             byte b = Event.pop();
             
-            if (b >= 32 && b <= 126) {
+            if (b > 32 && b <= 126) {
                 if (xCursor > 2)
                     FrameSelect.type((char)b, (xCursor++)-3, false);
             }
             else switch (b) {
+                case 32: //space
+                    if (ScopeChar == '.') ScopeChar = '|';
+                    else ScopeChar = '.';
+                    break;
                 case -5: //insert
                     break;
                 case -11: //up
@@ -95,9 +100,9 @@ public class playtrack extends page {
         }
         for (int i=0; i<left.length; ++i) {
             font.setColor(fg4);
-            font.draw(batch, ".", (i-2)*(float)1000/left.length, left[i]);
+            font.draw(batch, ""+ScopeChar, (i-2)*(float)1000/left.length, left[i]);
             font.setColor(fg1);
-            font.draw(batch, ".", (i-2)*(float)1000/left.length, right[i]);
+            font.draw(batch, ""+ScopeChar, (i-2)*(float)1000/left.length, right[i]);
         }
     }
     
